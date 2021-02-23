@@ -55,9 +55,7 @@ public class AuthController {
     public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
         JwtResponse jwtResponse = authService.loginCheck(loginRequest);
         if(jwtResponse.getCode() == 0)
-            return ResponseEntity
-                    .badRequest()
-                    .body(jwtResponse.getMessage());
+            return ResponseEntity.ok(jwtResponse.getMessage());
         else
             return ResponseEntity.ok(jwtResponse);
     }
