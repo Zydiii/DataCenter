@@ -1,0 +1,114 @@
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find java src paths:  [C:\Users\Zydiii\Desktop\DataCenter\src\main\java\]
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: project type not set, try to figure out...
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start find controllers in path : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find controller file : TestController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find controller file : AnnounceBoardController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find controller file : AssetController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find controller file : AuthController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find controller file : PublicChatController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find controller file : EnvironmentMangeController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find controller file : FittingManageController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find controller file : FlightManageController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find controller file : GameController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find controller file : RankController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find controller file : RoomController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find controller file : UserManageController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: find controller file : WeaponManageController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to parse controller file : TestController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to parse controller file : TestController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to parse controller file : AnnounceBoardController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to parse controller file : AnnounceBoardController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to parse controller file : AssetController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to parse controller file : AuthController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to parse controller file : AuthController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to parse controller file : PublicChatController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to parse controller file : PublicChatController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to parse controller file : EnvironmentMangeController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to parse controller file : FittingManageController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to parse controller file : FlightManageController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to parse controller file : GameController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to parse controller file : GameController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to parse controller file : RankController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to parse controller file : RankController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to parse controller file : RoomController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to parse controller file : RoomController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to parse controller file : UserManageController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to parse controller file : UserManageController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to parse controller file : WeaponManageController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: generate api docs start...
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\TestController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\TestController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\AnnounceBoard\AnnounceBoardController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\AnnounceBoard\AnnounceBoardController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\AuthControl\AuthController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\AuthControl\AuthController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\Chat\PublicChatController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\Chat\PublicChatController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\Game\GameController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\Game\GameController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\Rank\RankController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\Rank\RankController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\Room\RoomController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\Room\RoomController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: start to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\UserManage\UserManageController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: success to generate docs for controller file : C:\Users\Zydiii\Desktop\DataCenter\src\main\java\zyd\datacenter\Controllers\UserManage\UserManageController.java
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: generate index start !!!
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: generate index done !!!
+2月 23, 2021 4:03:16 下午 io.github.yedaxia.apidocs.LogUtils info
+信息: info: generate api docs done !!!

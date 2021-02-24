@@ -1,5 +1,7 @@
 package zyd.datacenter.Controllers.UserManage;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,6 +34,7 @@ public class UserManageController {
     }
 
     @GetMapping("/getOneUser/{id}")
+    @ApiImplicitParam(name = "id",value = "id",required = true,paramType = "query",dataType = "int")
     public ResponseEntity<?> getOneUser(@PathVariable("id") String id)
     {
         Optional<User> result = userService.findUser(id);
@@ -44,6 +47,7 @@ public class UserManageController {
     }
 
     @PostMapping("/createUser")
+    @ApiOperation("/添加学生信息")
     public ResponseEntity<?> createUser(@Valid @RequestBody User user)
     {
         user.setPassword(encoder.encode(user.getPassword()));
