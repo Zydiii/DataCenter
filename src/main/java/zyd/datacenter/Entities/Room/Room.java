@@ -140,9 +140,28 @@ public class Room {
         this.playerNum++;
     }
 
-    public void deleteUser(UserInRoom userInRoom){
-        this.users.remove(userInRoom);
-        this.playerNum--;
+//    public void deleteUser(UserInRoom userInRoom){
+//        this.users.remove(userInRoom);
+//        this.playerNum--;
+//    }
+
+    public void deleteUser(String userId){
+        for(UserInRoom userInRoom: users){
+            if(userInRoom.getUserId().equals(userId)){
+                users.remove(userInRoom);
+                this.playerNum--;
+                break;
+            }
+        }
+    }
+
+    public void changeUserState(String userId, int state){
+        for(UserInRoom userInRoom: users){
+            if(userInRoom.getUserId().equals(userId)){
+                userInRoom.setState(state);
+                break;
+            }
+        }
     }
 
     public void addSpectator(Spectator spectator){

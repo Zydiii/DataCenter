@@ -21,6 +21,7 @@ import zyd.datacenter.Repository.User.UserRepository;
 import zyd.datacenter.Security.jwt.JwtUtils;
 import zyd.datacenter.Security.services.UserDetailsImpl;
 import zyd.datacenter.Service.Auth.AuthService;
+import zyd.datacenter.Service.Mail.MailService;
 
 import java.util.List;
 import java.util.Set;
@@ -39,6 +40,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     PasswordEncoder encoder;
+
+    @Autowired
+    MailService mailService;
 
     public JwtResponse loginCheck (LoginRequest loginRequest) {
         if (userRepository.existsByUsername(loginRequest.getUsername())) {
@@ -122,6 +126,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     public Result getPassword(String email){
-        return new Result("邮件发送成功，请查收", 1);
+        if(userRepository.existsByEmail(email)){
+            User user = userRepository.findByEmail(email).get();
+            return mailService.sendSimpleMail(email, "【对抗仿真系统】 找回密码", "您的密码为：" + user.getPairPassword() + " ，请妥善保存您的密码。");
+        }
+        else{
+            return new Result("该邮箱地址不存在", 0);
+        }
+
     }
 }

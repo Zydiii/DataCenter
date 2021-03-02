@@ -28,4 +28,7 @@ public interface RoomService {
 
     public List<Room> getRoom(RoomType roomType);
 
+    public Result readyInRoom(UserInRoom userInRoom);
+
+    public Result cancelReadyInRoom(UserInRoom userInRoom);
 }

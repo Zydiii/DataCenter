@@ -73,14 +73,26 @@ public class RoomController {
         return resultToResponse(roomService.joinWatchRoom(spectator));
     }
 
+    @PostMapping("/readyInRoom")
+    public ResponseEntity<?> readyInRoom(@Valid @RequestBody UserInRoom userInRoom)
+    {
+        return ResponseEntity.ok(roomService.readyInRoom(userInRoom));
+    }
+
+    @PostMapping("/cancelReadyInRoom")
+    public ResponseEntity<?> cancelReadyInRoom(@Valid @RequestBody UserInRoom userInRoom)
+    {
+        return ResponseEntity.ok(roomService.cancelReadyInRoom(userInRoom));
+    }
+
     public ResponseEntity<?> resultToResponse(Result result)
     {
         if(result.getCode() == 0)
             return ResponseEntity
                     .badRequest()
-                    .body(result);
+                    .body(result.getMessage());
         else
-            return ResponseEntity.ok(result);
+            return ResponseEntity.ok(result.getMessage());
     }
 
 

@@ -81,7 +81,7 @@ public class RoomServiceImpl implements RoomService {
         if(room == null)
             return new Result("房间无效", 0);
         else {
-            room.deleteUser(userInRoom);
+            room.deleteUser(userInRoom.getUserId());
             roomRepository.save(room);
             user.setState(1);
             userRepository.save(user);
@@ -128,5 +128,19 @@ public class RoomServiceImpl implements RoomService {
 
     public List<Room> getRoom(RoomType roomType){
         return roomRepository.findAllByRoomType(roomType);
+    }
+
+    public Result readyInRoom(UserInRoom userInRoom){
+        Room room = roomRepository.findById(userInRoom.getRoomId()).get();
+        room.changeUserState(userInRoom.getUserId(), 1);
+        roomRepository.save(room);
+        return new Result("准备成功", 1);
+    }
+
+    public Result cancelReadyInRoom(UserInRoom userInRoom){
+        Room room = roomRepository.findById(userInRoom.getRoomId()).get();
+        room.changeUserState(userInRoom.getUserId(), 0);
+        roomRepository.save(room);
+        return new Result("取消准备成功", 1);
     }
 }

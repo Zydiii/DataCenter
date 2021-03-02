@@ -5,8 +5,10 @@ import io.github.yedaxia.apidocs.DocsConfig;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import zyd.datacenter.Service.Mail.MailService;
 
 import java.util.Date;
 

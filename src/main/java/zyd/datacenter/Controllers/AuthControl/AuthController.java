@@ -78,6 +78,14 @@ public class AuthController {
 
     @GetMapping("/offline/forgetpassword/{email}")
     public ResponseEntity<?> forgetPassword(@PathVariable("email") String email){
-        return ResponseEntity.ok(authService.getPassword(email));
+        Result result = authService.getPassword(email);
+        if(result.getCode() == 1){
+            return ResponseEntity.ok(result.getMessage());
+        }
+        else{
+            return ResponseEntity.badRequest().body(result.getMessage());
+        }
     }
+
+
 }

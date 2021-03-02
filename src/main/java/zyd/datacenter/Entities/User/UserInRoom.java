@@ -28,18 +28,24 @@ public class UserInRoom {
 
     private int result; // 0代表失败，1代表胜利，2代表平局
 
-    public UserInRoom(String roomId, String userId, int state, String campId, String weaponId, float score, float damageValue, int destroyNum, int crashNum, int result) {
+    public UserInRoom(String roomId, String userId)
+    {
         this.roomId = roomId;
         this.userId = userId;
-        this.state = state;
-        this.campId = campId;
-        this.weaponId = weaponId;
-        this.score = score;
-        this.damageValue = damageValue;
-        this.destroyNum = destroyNum;
-        this.crashNum = crashNum;
-        this.result = result;
     }
+
+//    public UserInRoom(String roomId, String userId, String campId, String weaponId, float score, float damageValue, int destroyNum, int crashNum, int result) {
+//        this.roomId = roomId;
+//        this.userId = userId;
+//        this.state = 0;
+//        this.campId = campId;
+//        this.weaponId = weaponId;
+//        this.score = score;
+//        this.damageValue = damageValue;
+//        this.destroyNum = destroyNum;
+//        this.crashNum = crashNum;
+//        this.result = result;
+//    }
 
     public String getId() {
         return id;

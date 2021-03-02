@@ -3,6 +3,7 @@ package zyd.datacenter.Initiate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import zyd.datacenter.Service.Mail.MailService;
 import zyd.datacenter.Service.Rank.RankService;
 
 import java.util.Timer;
@@ -27,6 +28,7 @@ public class Initiate implements CommandLineRunner {
         };
         timer.schedule(rankTimerTask, 0, 60000);
     }
+
 }
 
 
