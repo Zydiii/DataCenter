@@ -37,7 +37,11 @@ public class Room {
 
     private Set<Spectator> spectators; // 观战用户
 
-    public Room(String ip, int maxPlayerNum, int campNum, String environmentId, String ownerId, int maxSpectatorsNum) {
+    private float frequency; // 更新频率
+
+    private RoomType roomType; // 房间类型
+
+    public Room(String ip, int maxPlayerNum, int campNum, String environmentId, String ownerId, int maxSpectatorsNum, float frequency, RoomType roomType) {
         this.ip = ip;
         this.state = 0;
         this.playerNum = 0;
@@ -47,7 +51,8 @@ public class Room {
         this.ownerId = ownerId;
         this.maxSpectatorsNum = maxSpectatorsNum;
         this.spectatorsNum = 0;
-
+        this.frequency = frequency;
+        this.roomType = roomType;
     }
 
     public String getId() {
@@ -172,5 +177,13 @@ public class Room {
 
     public void setSpectators(Set<Spectator> spectators) {
         this.spectators = spectators;
+    }
+
+    public float getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(float frequency) {
+        this.frequency = frequency;
     }
 }

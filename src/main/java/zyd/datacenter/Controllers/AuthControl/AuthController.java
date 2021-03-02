@@ -55,7 +55,7 @@ public class AuthController {
     public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
         JwtResponse jwtResponse = authService.loginCheck(loginRequest);
         if(jwtResponse.getCode() == 0)
-            return ResponseEntity.ok(jwtResponse.getMessage());
+            return ResponseEntity.badRequest().body(jwtResponse.getMessage());
         else
             return ResponseEntity.ok(jwtResponse);
     }
@@ -65,9 +65,9 @@ public class AuthController {
         return authService.signUpCheck(signUpRequest);
     }
 
-    @GetMapping("/online/logout/{username}")
-    public ResponseEntity<?> logoutUser(@PathVariable("username") String username){
-        Result result = authService.logOut(username);
+    @GetMapping("/online/logout/{id}")
+    public ResponseEntity<?> logoutUser(@PathVariable("id") String id){
+        Result result = authService.logOut(id);
         if(result.getCode() == 0)
             return ResponseEntity
                     .badRequest()

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import zyd.datacenter.Entities.Room.Room;
+import zyd.datacenter.Entities.Room.RoomType;
 import zyd.datacenter.Entities.User.Spectator;
 import zyd.datacenter.Entities.User.UserInRoom;
 import zyd.datacenter.Payload.Result;
@@ -22,6 +23,12 @@ public class RoomController {
     public ResponseEntity<?> getAllRoom()
     {
         return ResponseEntity.ok(roomService.getAllRoom());
+    }
+
+    @GetMapping("/getRoom/{type}")
+    public ResponseEntity<?> getRoom(@PathVariable("type") RoomType type)
+    {
+        return ResponseEntity.ok(roomService.getRoom(type));
     }
 
     @PostMapping("/createRoom")

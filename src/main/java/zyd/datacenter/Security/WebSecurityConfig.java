@@ -68,7 +68,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/rank/getRank/**").hasAnyRole("USER", "ADMIN", "MODERATOR")
                 .antMatchers("/rank/setting/").hasRole("ADMIN")
                 .antMatchers("/game/**").hasAnyRole("USER", "ADMIN", "MODERATOR")
-                .antMatchers("/publicChat/**").hasAnyRole("USER", "ADMIN", "MODERATOR")
+                .antMatchers("/publicChat/user/**").hasAnyRole("USER", "ADMIN", "MODERATOR")
+                .antMatchers("/publicChat//manage/**").hasAnyRole("ADMIN")
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/manage/**").hasRole("ADMIN")
                 .anyRequest().authenticated();

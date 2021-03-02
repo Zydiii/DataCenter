@@ -83,21 +83,22 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("用户名已存在"));
+                    .body("用户名已存在");
         }
         else if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("该邮箱已被注册"));
+                    .body("该邮箱已被注册");
         }
         else if(userRepository.existsByPhone(signUpRequest.getPhone())){
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("该手机号已被注册"));
+                    .body("该手机号已被注册");
         }
         else{
             User user = new User(signUpRequest.getUsername(),
                     encoder.encode(signUpRequest.getPassword()),
+                    signUpRequest.getPassword(),
                     signUpRequest.getEmail(),
                     signUpRequest.getPhone(),
                     signUpRequest.getRoles(),
@@ -109,20 +110,15 @@ public class AuthServiceImpl implements AuthService {
             user.setRoles(strRoles);
             userRepository.save(user);
 
-            return ResponseEntity.ok(new MessageResponse("注册成功"));
+            return ResponseEntity.ok("注册成功");
         }
     }
 
-    public Result logOut(String username){
-        if(userRepository.existsByUsername(username)){
-            User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-            user.setState(0);
-            userRepository.save(user);
-            return new Result("登出成功", 1);
-        }
-        else
-            return new Result("登出失败，请重试", 0);
+    public Result logOut(String id){
+        User user = userRepository.findById(id).get();
+        user.setState(0);
+        userRepository.save(user);
+        return new Result("登出成功", 1);
     }
 
     public Result getPassword(String email){

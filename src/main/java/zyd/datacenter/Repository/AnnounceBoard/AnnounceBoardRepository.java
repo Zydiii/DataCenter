@@ -1,10 +1,8 @@
 package zyd.datacenter.Repository.AnnounceBoard;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import zyd.datacenter.Entities.AnnounceBoard.AnnounceBoard;
+import zyd.datacenter.Entities.AnnounceBoard.AnnouncementBoard;
 
-import java.util.List;
-
-public interface AnnounceBoardRepository extends MongoRepository<AnnounceBoard, String> {
+public interface AnnounceBoardRepository extends MongoRepository<AnnouncementBoard, String> {
 
 }

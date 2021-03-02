@@ -14,7 +14,9 @@ public class User {
 
     private String username; // 用户名
 
-    private String password; // 密码
+    private String password; // 加密密码
+
+    private String pairPassword; // 明文密码
 
     private String email; // 邮箱
 
@@ -38,9 +40,10 @@ public class User {
 
     private Set<String> realIds = new HashSet<>(); // 玩家学号
 
-    public User(String username, String password, String email, String phone, Set<String> roles, Set<String> realNames, Set<String> realIds) {
+    public User(String username, String password, String pairPassword, String email, String phone, Set<String> roles, Set<String> realNames, Set<String> realIds) {
         this.username = username;
         this.password = password;
+        this.pairPassword = pairPassword;
         this.email = email;
         this.phone = phone;
         this.roles = roles;
@@ -163,5 +166,13 @@ public class User {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public String getPairPassword() {
+        return pairPassword;
+    }
+
+    public void setPairPassword(String pairPassword) {
+        this.pairPassword = pairPassword;
     }
 }

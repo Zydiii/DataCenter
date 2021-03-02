@@ -3,6 +3,7 @@ package zyd.datacenter.Service.Impl.Game;
 import org.springframework.stereotype.Service;
 import zyd.datacenter.Entities.Game.GameHistory;
 import zyd.datacenter.Entities.Game.GameOverview;
+import zyd.datacenter.Payload.Result;
 import zyd.datacenter.Repository.Game.GameHistoryRepository;
 import zyd.datacenter.Repository.Game.GameOverviewRepository;
 import zyd.datacenter.Service.Game.GameHistoryService;
@@ -25,5 +26,10 @@ public class GameHistoryServiceImpl implements GameHistoryService {
 
     public GameOverview replay(String gameId){
         return gameOverviewRepository.getByGameId(gameId);
+    }
+
+    public Result addHistory(GameHistory gameHistory){
+        gameHistoryRepository.insert(gameHistory);
+        return new Result("创建成功", 1);
     }
 }

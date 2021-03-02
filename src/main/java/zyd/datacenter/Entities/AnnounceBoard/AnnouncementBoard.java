@@ -1,5 +1,6 @@
 package zyd.datacenter.Entities.AnnounceBoard;
 
+import io.swagger.annotations.ApiModel;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -10,7 +11,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @Document(collection = "AnnouncementBoard")
-public class AnnounceBoard {
+public class AnnouncementBoard {
     @Id
     private String id;
 
@@ -25,7 +26,7 @@ public class AnnounceBoard {
     @Indexed(direction = IndexDirection.DESCENDING)
     private long timeStamp; // 时间戳
 
-    public AnnounceBoard(String id, String text, String userId, Date date, String bjDate, long timeStamp) {
+    public AnnouncementBoard(String id, String text, String userId, Date date, String bjDate, long timeStamp) {
         this.id = id;
         this.text = text;
         this.userId = userId;

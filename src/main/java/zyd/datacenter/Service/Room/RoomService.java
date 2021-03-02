@@ -1,6 +1,7 @@
 package zyd.datacenter.Service.Room;
 
 import zyd.datacenter.Entities.Room.Room;
+import zyd.datacenter.Entities.Room.RoomType;
 import zyd.datacenter.Entities.User.Spectator;
 import zyd.datacenter.Entities.User.User;
 import zyd.datacenter.Entities.User.UserInRoom;
@@ -24,5 +25,7 @@ public interface RoomService {
     public Result match(UserInRoom userInRoom);
 
     public Result joinWatchRoom(Spectator spectator);
+
+    public List<Room> getRoom(RoomType roomType);
 
 }

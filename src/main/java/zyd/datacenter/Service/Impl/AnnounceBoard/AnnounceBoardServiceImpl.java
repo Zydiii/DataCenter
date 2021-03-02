@@ -1,16 +1,14 @@
 package zyd.datacenter.Service.Impl.AnnounceBoard;
 
 import org.springframework.stereotype.Service;
-import zyd.datacenter.Entities.AnnounceBoard.AnnounceBoard;
+import zyd.datacenter.Entities.AnnounceBoard.AnnouncementBoard;
 import zyd.datacenter.Payload.Result;
 import zyd.datacenter.Repository.AnnounceBoard.AnnounceBoardRepository;
 import zyd.datacenter.Repository.User.UserRepository;
 import zyd.datacenter.Service.AnnounceBoard.AnnounceBoardService;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 @Service
 public class AnnounceBoardServiceImpl implements AnnounceBoardService {
@@ -23,7 +21,7 @@ public class AnnounceBoardServiceImpl implements AnnounceBoardService {
         this.userRepository = userRepository;
     }
 
-    public Result writeAnnounce(AnnounceBoard announceBoard){
+    public Result writeAnnounce(AnnouncementBoard announceBoard){
         String managerId = announceBoard.getUserId();
         if(userRepository.existsById(managerId)){
             Date date = new Date();
@@ -35,8 +33,8 @@ public class AnnounceBoardServiceImpl implements AnnounceBoardService {
             return new Result("没有权限", 0);
     }
 
-    public AnnounceBoard getLatestAnnounce(){
-        List<AnnounceBoard> announceBoards = announceBoardRepository.findAll();
+    public AnnouncementBoard getLatestAnnounce(){
+        List<AnnouncementBoard> announceBoards = announceBoardRepository.findAll();
         if(announceBoards.isEmpty())
             return null;
         else

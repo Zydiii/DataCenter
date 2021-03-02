@@ -31,7 +31,7 @@ public class RankController {
     }
 
     // 排名策略待定
-    @PostMapping("/getRank")
+    @GetMapping("/getRank")
     public ResponseEntity<?> getRank(){
         return ResponseEntity.ok(rankService.getRank());
     }

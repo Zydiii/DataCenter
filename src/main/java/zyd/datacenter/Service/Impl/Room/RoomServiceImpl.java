@@ -2,6 +2,7 @@ package zyd.datacenter.Service.Impl.Room;
 
 import org.springframework.stereotype.Service;
 import zyd.datacenter.Entities.Room.Room;
+import zyd.datacenter.Entities.Room.RoomType;
 import zyd.datacenter.Entities.User.Spectator;
 import zyd.datacenter.Entities.User.User;
 import zyd.datacenter.Entities.User.UserInRoom;
@@ -123,5 +124,9 @@ public class RoomServiceImpl implements RoomService {
     private boolean checkOwner(Room questRoom){
         Room room = roomRepository.findById(questRoom.getId()).get();
         return room.getOwnerId() == questRoom.getOwnerId();
+    }
+
+    public List<Room> getRoom(RoomType roomType){
+        return roomRepository.findAllByRoomType(roomType);
     }
 }

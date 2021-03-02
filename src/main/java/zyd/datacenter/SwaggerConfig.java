@@ -35,8 +35,6 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 // 标题
                 .title("接口文档")
-                // 接口描述
-                .description("swagger")
                 // 版本信息
                 .version("1.0")
                 // 构建

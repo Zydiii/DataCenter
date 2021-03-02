@@ -25,7 +25,7 @@ public class Initiate implements CommandLineRunner {
                 //System.out.println("rank");
             }
         };
-        timer.schedule(rankTimerTask, 0, 600000);
+        timer.schedule(rankTimerTask, 0, 60000);
     }
 }
 

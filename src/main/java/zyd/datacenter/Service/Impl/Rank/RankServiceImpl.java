@@ -38,9 +38,9 @@ public class RankServiceImpl implements RankService {
     // 分数比较器
     Comparator<User> comparatorUserScore = new Comparator <User>(){
         public int compare(User user1,User user2){
-            if (user1.getScore() > user2.getScore())
+            if (user1.getScore() < user2.getScore())
                 return 1;
-            else if (user1.getScore() < user2.getScore())
+            else if (user1.getScore() > user2.getScore())
                 return -1;
             else
                 return 0;

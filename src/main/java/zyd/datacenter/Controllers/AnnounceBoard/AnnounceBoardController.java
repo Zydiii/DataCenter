@@ -3,7 +3,7 @@ package zyd.datacenter.Controllers.AnnounceBoard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import zyd.datacenter.Entities.AnnounceBoard.AnnounceBoard;
+import zyd.datacenter.Entities.AnnounceBoard.AnnouncementBoard;
 import zyd.datacenter.Payload.Result;
 import zyd.datacenter.Service.AnnounceBoard.AnnounceBoardService;
 
@@ -17,7 +17,7 @@ public class AnnounceBoardController {
     private AnnounceBoardService announceBoardService;
 
     @PostMapping("/manage/write")
-    public ResponseEntity<?> writeAnnounce(@Valid @RequestBody AnnounceBoard announceBoard){
+    public ResponseEntity<?> writeAnnounce(@Valid @RequestBody AnnouncementBoard announceBoard){
         Result result = announceBoardService.writeAnnounce(announceBoard);
         System.out.println();
         return resultToResponse(result);
