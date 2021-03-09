@@ -31,4 +31,8 @@ public interface RoomService {
     public Result readyInRoom(UserInRoom userInRoom);
 
     public Result cancelReadyInRoom(UserInRoom userInRoom);
+
+    public Room getOneRoom(String roomId);
+
+    public Result beginGame(UserInRoom userInRoom);
 }

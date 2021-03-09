@@ -31,6 +31,12 @@ public class RoomController {
         return ResponseEntity.ok(roomService.getRoom(type));
     }
 
+    @GetMapping("/getOneRoom/{roomId}")
+    public ResponseEntity<?> getOneRoom(@PathVariable("roomId") String roomId)
+    {
+        return ResponseEntity.ok(roomService.getOneRoom(roomId));
+    }
+
     @PostMapping("/createRoom")
     public ResponseEntity<?> createRoom(@Valid @RequestBody Room room)
     {
@@ -95,7 +101,11 @@ public class RoomController {
             return ResponseEntity.ok(result.getMessage());
     }
 
-
+    @PostMapping("/beginGame")
+    public ResponseEntity<?> beginGame(@Valid @RequestBody UserInRoom userInRoom)
+    {
+        return resultToResponse(roomService.beginGame(userInRoom));
+    }
 
 
 }

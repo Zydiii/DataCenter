@@ -2,6 +2,7 @@ package zyd.datacenter.Entities.User;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import zyd.datacenter.Repository.User.UserRepository;
 
 @Document(value = "UserInRoom")
 public class UserInRoom {
@@ -9,6 +10,8 @@ public class UserInRoom {
     private String id;
 
     private String roomId; // 房间编号
+
+    private String username; // 玩家用户名
 
     private String userId; // 玩家编号
 
@@ -28,10 +31,15 @@ public class UserInRoom {
 
     private int result; // 0代表失败，1代表胜利，2代表平局
 
+    private UserRepository userRepository;
+
+
     public UserInRoom(String roomId, String userId)
     {
         this.roomId = roomId;
         this.userId = userId;
+        User user = userRepository.findById(userId).get();
+        this.username = user.getUsername();
     }
 
 //    public UserInRoom(String roomId, String userId, String campId, String weaponId, float score, float damageValue, int destroyNum, int crashNum, int result) {
@@ -46,6 +54,14 @@ public class UserInRoom {
 //        this.crashNum = crashNum;
 //        this.result = result;
 //    }
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 
     public String getId() {
         return id;

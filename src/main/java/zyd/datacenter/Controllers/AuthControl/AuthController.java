@@ -76,9 +76,9 @@ public class AuthController {
             return ResponseEntity.ok(result.getMessage());
     }
 
-    @GetMapping("/offline/forgetpassword/{email}")
-    public ResponseEntity<?> forgetPassword(@PathVariable("email") String email){
-        Result result = authService.getPassword(email);
+    @GetMapping("/offline/forgetpasswordEmail/{email}")
+    public ResponseEntity<?> forgetPasswordEmail(@PathVariable("email") String email){
+        Result result = authService.getPasswordEmail(email);
         if(result.getCode() == 1){
             return ResponseEntity.ok(result.getMessage());
         }
@@ -87,5 +87,15 @@ public class AuthController {
         }
     }
 
+    @GetMapping("/offline/forgetpasswordUsername/{username}")
+    public ResponseEntity<?> forgetPasswordUsername(@PathVariable("username") String username){
+        Result result = authService.getPasswordUsername(username);
+        if(result.getCode() == 1){
+            return ResponseEntity.ok(result.getMessage());
+        }
+        else{
+            return ResponseEntity.badRequest().body(result.getMessage());
+        }
+    }
 
 }

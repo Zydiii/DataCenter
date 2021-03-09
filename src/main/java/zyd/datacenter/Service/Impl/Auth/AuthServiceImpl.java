@@ -125,13 +125,24 @@ public class AuthServiceImpl implements AuthService {
         return new Result("登出成功", 1);
     }
 
-    public Result getPassword(String email){
+    public Result getPasswordEmail(String email){
         if(userRepository.existsByEmail(email)){
             User user = userRepository.findByEmail(email).get();
             return mailService.sendSimpleMail(email, "【对抗仿真系统】 找回密码", "您的密码为：" + user.getPairPassword() + " ，请妥善保存您的密码。");
         }
         else{
             return new Result("该邮箱地址不存在", 0);
+        }
+
+    }
+
+    public Result getPasswordUsername(String username){
+        if(userRepository.existsByUsername(username)){
+            User user = userRepository.findByUsername(username).get();
+            return mailService.sendSimpleMail(user.getEmail(), "【对抗仿真系统】 找回密码", "您的密码为：" + user.getPairPassword() + " ，请妥善保存您的密码。");
+        }
+        else{
+            return new Result("该用户不存在", 0);
         }
 
     }

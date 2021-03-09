@@ -13,5 +13,8 @@ public interface AuthService {
 
     public Result logOut(String username);
 
-    public Result getPassword(String email);
+    public Result getPasswordEmail(String email);
+
+    public Result getPasswordUsername(String username);
+
 }

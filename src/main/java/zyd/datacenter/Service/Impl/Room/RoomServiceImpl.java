@@ -13,6 +13,7 @@ import zyd.datacenter.Service.Room.RoomService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class RoomServiceImpl implements RoomService {
@@ -61,6 +62,10 @@ public class RoomServiceImpl implements RoomService {
         if(room == null)
             return new Result("房间无效", 0);
         else{
+            if(room.getState() == 1)
+            {
+                return new Result("不能加入已经开始的房间", 0);
+            }
             if(room.getPlayerNum() < room.getMaxPlayerNum()){
                 room.addUser(userInRoom);
                 roomRepository.save(room);
@@ -123,7 +128,7 @@ public class RoomServiceImpl implements RoomService {
     // 检验是否是房主
     private boolean checkOwner(Room questRoom){
         Room room = roomRepository.findById(questRoom.getId()).get();
-        return room.getOwnerId() == questRoom.getOwnerId();
+        return room.getOwnerId().equals(questRoom.getOwnerId());
     }
 
     public List<Room> getRoom(RoomType roomType){
@@ -142,5 +147,31 @@ public class RoomServiceImpl implements RoomService {
         room.changeUserState(userInRoom.getUserId(), 0);
         roomRepository.save(room);
         return new Result("取消准备成功", 1);
+    }
+
+    public Room getOneRoom(String roomId){
+        return roomRepository.findById(roomId).get();
+    }
+
+    public Result beginGame(UserInRoom userInRoom){
+        Room room = roomRepository.findById(userInRoom.getRoomId()).get();
+        if(room.getOwnerId().equals(userInRoom.getUserId())){
+            Set<UserInRoom> users = room.getUsers();
+            for(UserInRoom user: users){
+                if(user.getState() == 0){
+                    return new Result("有玩家未准备，请稍后重试", 0);
+                }
+            }
+            for(UserInRoom user: users){
+                user.setState(2);
+            }
+            room.setUsers(users);
+            room.setState(1);
+            roomRepository.save(room);
+            return new Result("操作成功，即将开始游戏......", 1);
+        }
+        else{
+            return new Result("没有权限", 0);
+        }
     }
 }

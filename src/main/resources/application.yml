@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: spring-mongo-service
+  data:
+    mongodb:
+#      host: localhost
+#      database: TEST
+#      port: 27017
+
+      host: '${MONGO_HOST}'
+      port: '${MONGO_PORT}'
+      database: '${MONGO_DB}'
+      username: '${MONGO_USERNAME}'
+      password: '${MONGO_PASSWORD}'
+      authentication-database: 'admin'
+#       uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:30602/${MONGO_DB}?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false
+
+  mail:
+    host: smtp.qq.com #邮箱服务器地址
+    username: 1813511474@qq.com # 发件人的邮箱
+    password: ioioazjjmybmheih # qq 邮箱的第三方授权码 并非个人密码
+    default-encoding: UTF-8
+    properties:
+      mail.smtp.ssl.enable: true #开启ssl 否则 503 错误
+
+
+  cloud:
+    kubernetes:
+      discovery:
+        register: true
+      secrets:
+        name: mongodb-secret
+
+      config:
+        enabled: true
+        sources:
+          - namespace: default
+            name: mongodb-configmap
+      reload:
+        enabled: true
+        mode: polling
+        period: 1000
+management:
+  endpoint:
+    restart:
+      enabled: true
+    health:
+      enabled: true
+    info:
+      enabled: true
+server:
+  tomcat:
+    uri-encoding: utf-8
+    max-http-form-post-size: 8096
+#  ssl:
+#    enabled: true
+#    key-store: src/main/resources/bootsecurity.p12
+#    key-store-password: bootsecurity
+#    keyStoreType: PKCS12
+#    keyAlias: bootsecurity

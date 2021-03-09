@@ -3,7 +3,9 @@ package zyd.datacenter.Entities.Room;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import zyd.datacenter.Entities.User.Spectator;
+import zyd.datacenter.Entities.User.User;
 import zyd.datacenter.Entities.User.UserInRoom;
+import zyd.datacenter.Repository.User.UserRepository;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +33,8 @@ public class Room {
 
     private String ownerId; // 房间创建者编号
 
+    private String ownerUsername; // 房间创建者用户名
+
     private int maxSpectatorsNum; // 最大观战者人数
 
     private int spectatorsNum; // 当前观战者人数
@@ -41,6 +45,8 @@ public class Room {
 
     private RoomType roomType; // 房间类型
 
+    private UserRepository userRepository;
+
     public Room(String ip, int maxPlayerNum, int campNum, String environmentId, String ownerId, int maxSpectatorsNum, float frequency, RoomType roomType) {
         this.ip = ip;
         this.state = 0;
@@ -49,9 +55,27 @@ public class Room {
         this.campNum = campNum;
         this.environmentId = environmentId;
         this.ownerId = ownerId;
+        User user = userRepository.findById(ownerId).get();
+        this.ownerUsername = user.getUsername();
         this.maxSpectatorsNum = maxSpectatorsNum;
         this.spectatorsNum = 0;
         this.frequency = frequency;
+        this.roomType = roomType;
+    }
+
+    public String getOwnerUsername() {
+        return ownerUsername;
+    }
+
+    public void setOwnerUsername(String ownerUsername) {
+        this.ownerUsername = ownerUsername;
+    }
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
     }
 
