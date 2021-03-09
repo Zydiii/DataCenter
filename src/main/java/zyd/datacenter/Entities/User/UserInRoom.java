@@ -31,15 +31,10 @@ public class UserInRoom {
 
     private int result; // 0代表失败，1代表胜利，2代表平局
 
-    private UserRepository userRepository;
-
-
     public UserInRoom(String roomId, String userId)
     {
         this.roomId = roomId;
         this.userId = userId;
-        User user = userRepository.findById(userId).get();
-        this.username = user.getUsername();
     }
 
 //    public UserInRoom(String roomId, String userId, String campId, String weaponId, float score, float damageValue, int destroyNum, int crashNum, int result) {

@@ -32,6 +32,8 @@ public class RoomServiceImpl implements RoomService {
 
     public Result createRoom(Room room){
         room.setIp(allocatRoom());
+        User user = userRepository.findById(room.getOwnerId()).get();
+        room.setOwnerUsername(user.getUsername());
         roomRepository.insert(room);
         return new Result("创建成功", 1);
     }
@@ -67,6 +69,7 @@ public class RoomServiceImpl implements RoomService {
                 return new Result("不能加入已经开始的房间", 0);
             }
             if(room.getPlayerNum() < room.getMaxPlayerNum()){
+                userInRoom.setUsername(user.getUsername());
                 room.addUser(userInRoom);
                 roomRepository.save(room);
                 user.setState(2);

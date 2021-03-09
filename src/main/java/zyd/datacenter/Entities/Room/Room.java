@@ -45,8 +45,6 @@ public class Room {
 
     private RoomType roomType; // 房间类型
 
-    private UserRepository userRepository;
-
     public Room(String ip, int maxPlayerNum, int campNum, String environmentId, String ownerId, int maxSpectatorsNum, float frequency, RoomType roomType) {
         this.ip = ip;
         this.state = 0;
@@ -55,8 +53,6 @@ public class Room {
         this.campNum = campNum;
         this.environmentId = environmentId;
         this.ownerId = ownerId;
-        User user = userRepository.findById(ownerId).get();
-        this.ownerUsername = user.getUsername();
         this.maxSpectatorsNum = maxSpectatorsNum;
         this.spectatorsNum = 0;
         this.frequency = frequency;
