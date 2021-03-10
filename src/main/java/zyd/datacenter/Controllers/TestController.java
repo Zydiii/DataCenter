@@ -36,9 +36,14 @@ public class TestController {
 
         HttpEntity<User> request = new HttpEntity<>(new User("user4", "123456", "123456", "1", "1", roles, realNames, realIds ));//将对象装入HttpEntity中
         //String info = restTemplate.postForObject("http://202.120.40.8:30609/auth/offline/login", request, String.class);
-        String info = restTemplate.postForObject("http://202.120.40.8:30604", request, String.class);
 
-        return info;
+        try{
+            String info = restTemplate.postForObject("http://202.120.40.8:30604", request, String.class);
+            return "Ok";
+        }catch (Exception e)
+        {
+            return e.toString();
+        }
     }
 
     @GetMapping("/all")
