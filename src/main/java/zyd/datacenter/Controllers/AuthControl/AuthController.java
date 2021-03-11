@@ -60,6 +60,12 @@ public class AuthController {
             return ResponseEntity.ok(jwtResponse);
     }
 
+    @PostMapping("/offline/login1")
+    public String loginUser1(@Valid @RequestBody LoginRequest loginRequest) {
+        JwtResponse jwtResponse = authService.loginCheck(loginRequest);
+        return jwtResponse.getAccessToken();
+    }
+
     @PostMapping("/offline/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         return authService.signUpCheck(signUpRequest);
