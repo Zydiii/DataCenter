@@ -9,4 +9,6 @@ public interface ChannelChatService {
     public Result sendMessage(ChannelChat channelChat);
 
     public List<ChannelChat> getMessage(String channelId);
+
+    public List<ChannelChat> getMessageByTime(ChannelChat channelChat);
 }

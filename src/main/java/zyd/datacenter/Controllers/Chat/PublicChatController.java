@@ -30,6 +30,11 @@ public class PublicChatController {
         return ResponseEntity.ok(channelChatService.getMessage(channelId));
     }
 
+    @PostMapping("/user/getMessageByTime")
+    public ResponseEntity<?> getMessageByTime(@Valid @RequestBody ChannelChat channelChat){
+        return ResponseEntity.ok(channelChatService.getMessageByTime(channelChat));
+    }
+
     @GetMapping("/user/getChannels")
     public ResponseEntity<?> getChannels(){
         return ResponseEntity.ok(channelService.getChannels());

@@ -5,4 +5,7 @@ import zyd.datacenter.Entities.Chat.Channel;
 
 public interface ChannelRepository extends MongoRepository<Channel, String> {
     boolean existsByChannelName(String channelName);
+
+    Channel findByChannelName(String channelName);
+
 }

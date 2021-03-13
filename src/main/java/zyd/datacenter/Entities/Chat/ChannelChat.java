@@ -1,7 +1,10 @@
 package zyd.datacenter.Entities.Chat;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import zyd.datacenter.Entities.User.User;
+import zyd.datacenter.Repository.User.UserRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,7 +17,11 @@ public class ChannelChat {
 
     private String userId; // 用户编号
 
+    private String username; // 用户名
+
     private String channelId; // 频道编号
+
+    private String channelName; // 频道名称
 
     private String chat; // 聊天内容
 
@@ -33,6 +40,38 @@ public class ChannelChat {
         SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");     // 北京
         bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));  // 设置北京时区
         this.bjDate = bjSdf.format(this.date);
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public String getBjDate() {
+        return bjDate;
+    }
+
+    public void setBjDate(String bjDate) {
+        this.bjDate = bjDate;
     }
 
     public String getId() {

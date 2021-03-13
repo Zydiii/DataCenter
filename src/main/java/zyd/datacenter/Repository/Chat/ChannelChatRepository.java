@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface ChannelChatRepository extends MongoRepository<ChannelChat, String> {
     List<ChannelChat> getAllByChannelId(String channelId);
+
+    List<ChannelChat> getAllByTimeStampGreaterThan(long timestamp);
+
+    List<ChannelChat> getAllByChannelNameAndTimeStampGreaterThan(String channelName, long timestamp);
 }
