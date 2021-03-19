@@ -2,6 +2,7 @@ package zyd.datacenter.Entities.Game;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import zyd.datacenter.Entities.Room.RoomType;
 
 @Document("GameHistory")
 public class GameHistory {

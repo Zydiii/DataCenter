@@ -5,8 +5,8 @@ import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(value = "WeekRank")
-public class WeekRank {
+@Document(value = "DayRank")
+public class DayRank {
     @Id
     private String id;
 
@@ -15,7 +15,7 @@ public class WeekRank {
     @Indexed(direction = IndexDirection.DESCENDING)
     private float score; // 按照降序存储玩家分数
 
-    public WeekRank(String username, float score) {
+    public DayRank(String username, float score) {
         this.username = username;
         this.score = score;
     }

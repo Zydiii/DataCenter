@@ -35,4 +35,8 @@ public interface RoomService {
     public Room getOneRoom(String roomId);
 
     public Result beginGame(UserInRoom userInRoom);
+
+    public Result endGame(Room room);
+
+    public Result changeScore(UserInRoom userInRoom);
 }

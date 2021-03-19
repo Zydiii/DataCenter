@@ -72,6 +72,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/publicChat//manage/**").hasAnyRole("ADMIN")
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/manage/**").hasRole("ADMIN")
+                .antMatchers("/score/**").hasAnyRole("USER", "ADMIN", "MODERATOR")
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -43,4 +43,10 @@ public class GameController {
     {
         return ResponseEntity.ok(gameHistoryService.replay(gameId));
     }
+
+    @GetMapping("/getAllGameOverview")
+    public ResponseEntity<?> getAllGameOverview()
+    {
+        return ResponseEntity.ok(gameOverviewService.getAllGameOverview());
+    }
 }

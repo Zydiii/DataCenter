@@ -39,7 +39,7 @@ public class Room {
 
     private int spectatorsNum; // 当前观战者人数
 
-    private Set<Spectator> spectators; // 观战用户
+    private Set<Spectator> spectators = new HashSet<>();  // 观战用户
 
     private float frequency; // 更新频率
 
@@ -158,6 +158,19 @@ public class Room {
     public void addUser(UserInRoom userInroom){
         this.users.add(userInroom);
         this.playerNum++;
+    }
+
+    public void changeUser(UserInRoom userInRoom){
+        for(UserInRoom user: users){
+            if(user.getUserId().equals(userInRoom.getUserId())){
+                user.setScore(userInRoom.getScore());
+                user.setDamageValue(userInRoom.getDamageValue());
+                user.setCrashNum(userInRoom.getCrashNum());
+                user.setDestroyNum(userInRoom.getDestroyNum());
+                user.setResult(userInRoom.getResult());
+                break;
+            }
+        }
     }
 
 //    public void deleteUser(UserInRoom userInRoom){

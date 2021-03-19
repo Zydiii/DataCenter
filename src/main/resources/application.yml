@@ -6,6 +6,7 @@ spring:
       host: localhost
       database: TEST
       port: 27017
+      replica-set-name: rs0
 
 #      host: '${MONGO_HOST}'
 #      port: '${MONGO_PORT}'
@@ -52,6 +53,8 @@ server:
   tomcat:
     uri-encoding: utf-8
     max-http-form-post-size: 8096
+  port:
+    8081
 #  ssl:
 #    enabled: true
 #    key-store: src/main/resources/bootsecurity.p12

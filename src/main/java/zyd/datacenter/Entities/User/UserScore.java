@@ -14,15 +14,26 @@ public class UserScore {
 
     private String userId; // 玩家编号
 
+    private String username; // 用户名
+
     @Indexed(direction = IndexDirection.ASCENDING)
     private Date getScoreDate; // 获得积分的时间
 
+    private long timestamp;
+
     private float score; // 获得的积分
 
-    public UserScore(String userId, Date getScoreDate, float score) {
+    public UserScore(String userId, float score) {
         this.userId = userId;
-        this.getScoreDate = getScoreDate;
         this.score = score;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getId() {
@@ -55,5 +66,13 @@ public class UserScore {
 
     public void setScore(float score) {
         this.score = score;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

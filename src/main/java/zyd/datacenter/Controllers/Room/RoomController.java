@@ -107,5 +107,17 @@ public class RoomController {
         return resultToResponse(roomService.beginGame(userInRoom));
     }
 
+    @PostMapping("/changeScore")
+    public ResponseEntity<?> changeScore(@Valid @RequestBody UserInRoom userInRoom)
+    {
+        return resultToResponse(roomService.changeScore(userInRoom));
+    }
+
+    @PostMapping("/endGame")
+    public ResponseEntity<?> endGame(@Valid @RequestBody Room room)
+    {
+        return resultToResponse(roomService.endGame(room));
+    }
+
 
 }

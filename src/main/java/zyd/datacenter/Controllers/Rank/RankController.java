@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import zyd.datacenter.Entities.Rank.RankSetting;
+import zyd.datacenter.Entities.Rank.RankType;
 import zyd.datacenter.Payload.Result;
 import zyd.datacenter.Service.Rank.RankService;
 import zyd.datacenter.Service.Rank.RankSettingService;
@@ -31,10 +32,11 @@ public class RankController {
     }
 
     // 排名策略待定
-    @GetMapping("/getRank")
-    public ResponseEntity<?> getRank(){
-        return ResponseEntity.ok(rankService.getRank());
+    @GetMapping("/getRank/{rankType}")
+    public ResponseEntity<?> getRank(@PathVariable("rankType") RankType rankType){
+        return ResponseEntity.ok(rankService.getRank(rankType));
     }
+
 
     public ResponseEntity<?> resultToResponse(Result result)
     {

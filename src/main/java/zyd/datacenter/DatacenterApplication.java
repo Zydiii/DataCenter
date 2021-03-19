@@ -14,15 +14,21 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.MongoDatabaseFactory;
+import org.springframework.data.mongodb.MongoTransactionManager;
+import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-import java.util.Date;
 
 @SpringBootApplication
+@EnableScheduling
+@EnableRetry
 public class DatacenterApplication {
 
 	public static void main(String[] args) {
 
 		SpringApplication.run(DatacenterApplication.class, args);
+
 
 //		DocsConfig config = new DocsConfig();
 //		config.setProjectPath("C:\\Users\\Zydiii\\Desktop\\DataCenter"); // 项目根目录
@@ -31,6 +37,11 @@ public class DatacenterApplication {
 //		config.setDocsPath("C:\\Users\\Zydiii\\Desktop\\DataCenter\\file"); // 生成API 文档所在目录
 //		config.setAutoGenerate(Boolean.TRUE);  // 配置自动生成
 //		Docs.buildHtmlDocs(config); // 执行生成文档
+	}
+
+	@Bean
+	MongoTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
+		return new MongoTransactionManager(dbFactory);
 	}
 
 //	@Bean

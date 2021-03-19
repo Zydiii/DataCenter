@@ -2,6 +2,7 @@ package zyd.datacenter.Entities.Game;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import zyd.datacenter.Entities.Room.RoomType;
 import zyd.datacenter.Entities.User.UserInRoom;
 
 import java.util.Date;
@@ -21,15 +22,13 @@ public class GameOverview {
 
     private Date endTime; // 结束时间
 
-    private String type; // 战斗类型
+    private RoomType type; // 战斗类型
 
     private Set<UserInRoom> userInRoom = new HashSet<>(); // 战斗参与的用户
 
-    public GameOverview(String gameId, String roomIp, Date beginTime, Date endTime, String type, Set<UserInRoom> userInRoom) {
-        this.gameId = gameId;
+    public GameOverview(String roomIp, Date beginTime, RoomType type, Set<UserInRoom> userInRoom) {
         this.roomIp = roomIp;
         this.beginTime = beginTime;
-        this.endTime = endTime;
         this.type = type;
         this.userInRoom = userInRoom;
     }
@@ -66,11 +65,11 @@ public class GameOverview {
         this.endTime = endTime;
     }
 
-    public String getType() {
+    public RoomType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(RoomType type) {
         this.type = type;
     }
 
