@@ -1,11 +1,14 @@
 package zyd.datacenter.Entities.Weapon;
 
+import io.swagger.annotations.ApiModel;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.File;
 
 @Document(value = "Equipment")
+@ApiModel(value="Equipment", description="装备数据，目前没有用")
 public class Equipment {
     @Id
     private String id;
@@ -15,6 +18,9 @@ public class Equipment {
     private File equipFile; // 装备模型文件
 
     private String type; // 装备类型
+
+    @Version
+    private Long version;
 
     public Equipment(String equipName, File equipFile, String type) {
         this.equipName = equipName;

@@ -1,5 +1,9 @@
 package zyd.datacenter.Controllers.AuthControl;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +36,7 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/auth")
+@Api(value = "权限验证接口", tags="权限验证接口")
 public class AuthController {
     @Autowired
     private AuthService authService;
@@ -52,7 +57,8 @@ public class AuthController {
     JwtUtils jwtUtils;
 
     @PostMapping("/offline/login")
-    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+    @ApiOperation(value = "登录", notes = "用户登录需要调用此接口")
+    public ResponseEntity<?> loginUser(@Valid @RequestBody @ApiParam("登录json数据，需要给password、username") LoginRequest loginRequest) {
         JwtResponse jwtResponse = authService.loginCheck(loginRequest);
         if(jwtResponse.getCode() == 0)
             return ResponseEntity.badRequest().body(jwtResponse.getMessage());
@@ -61,18 +67,21 @@ public class AuthController {
     }
 
     @PostMapping("/offline/login1")
-    public String loginUser1(@Valid @RequestBody LoginRequest loginRequest) {
+    @ApiOperation(value = "登录", notes = "已弃用")
+    public String loginUser1(@Valid @RequestBody @ApiParam("登录json数据，需要给password、username") LoginRequest loginRequest) {
         JwtResponse jwtResponse = authService.loginCheck(loginRequest);
         return jwtResponse.getAccessToken();
     }
 
     @PostMapping("/offline/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    @ApiOperation(value = "注册", notes = "注册新用户需要调用此接口")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody @ApiParam("注册json数据，至少需要给username、password") SignupRequest signUpRequest) {
         return authService.signUpCheck(signUpRequest);
     }
 
     @GetMapping("/online/logout/{id}")
-    public ResponseEntity<?> logoutUser(@PathVariable("id") String id){
+    @ApiOperation(value = "登出", notes = "退出登录，改变用户状态")
+    public ResponseEntity<?> logoutUser(@PathVariable("id") @ApiParam("登出用户id") String id){
         Result result = authService.logOut(id);
         if(result.getCode() == 0)
             return ResponseEntity
@@ -83,7 +92,8 @@ public class AuthController {
     }
 
     @GetMapping("/offline/forgetpasswordEmail/{email}")
-    public ResponseEntity<?> forgetPasswordEmail(@PathVariable("email") String email){
+    @ApiOperation(value = "用邮箱找回密码", notes = "弃用")
+    public ResponseEntity<?> forgetPasswordEmail(@PathVariable("email") @ApiParam("邮箱email") String email){
         Result result = authService.getPasswordEmail(email);
         if(result.getCode() == 1){
             return ResponseEntity.ok(result.getMessage());
@@ -94,7 +104,8 @@ public class AuthController {
     }
 
     @GetMapping("/offline/forgetpasswordUsername/{username}")
-    public ResponseEntity<?> forgetPasswordUsername(@PathVariable("username") String username){
+    @ApiOperation(value = "用用户名找回密码", notes = "输入用户名，判断该用户名是否存在，并向其邮箱发送密码")
+    public ResponseEntity<?> forgetPasswordUsername(@PathVariable("username") @ApiParam("用户名username") String username){
         Result result = authService.getPasswordUsername(username);
         if(result.getCode() == 1){
             return ResponseEntity.ok(result.getMessage());

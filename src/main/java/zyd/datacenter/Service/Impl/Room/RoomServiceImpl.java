@@ -245,10 +245,9 @@ public class RoomServiceImpl implements RoomService {
             user.setScore(user.getScore() + userInRoom.getScore());
             userRepository.save(user);
             // 添加分数获取记录
-            UserScore userScore = new UserScore(userInRoom.getUserId(), userInRoom.getScore());
+            UserScore userScore = new UserScore(userInRoom.getUsername(), userInRoom.getScore());
             userScore.setTimestamp(date.getTime());
             userScore.setGetScoreDate(date);
-            userScore.setUsername(user.getUsername());
             userScoreRepository.insert(userScore);
         }
 

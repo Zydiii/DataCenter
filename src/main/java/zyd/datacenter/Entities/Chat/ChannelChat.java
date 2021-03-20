@@ -1,7 +1,10 @@
 package zyd.datacenter.Entities.Chat;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 import zyd.datacenter.Entities.User.User;
 import zyd.datacenter.Repository.User.UserRepository;
@@ -11,25 +14,37 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @Document(value = "ChannelChat")
+@ApiModel(value="ChannelChat", description="公共聊天频道数据，存储用户在公共聊天频道内的发言")
 public class ChannelChat {
     @Id
     private String id;
 
+    @ApiModelProperty(value = "用户编号")
     private String userId; // 用户编号
 
+    @ApiModelProperty(value = "用户名")
     private String username; // 用户名
 
+    @ApiModelProperty(value = "频道编号")
     private String channelId; // 频道编号
 
+    @ApiModelProperty(value = "频道名称")
     private String channelName; // 频道名称
 
+    @ApiModelProperty(value = "聊天内容")
     private String chat; // 聊天内容
 
+    @ApiModelProperty(value = "发言时间")
     private Date date; // 发言时间
 
+    @ApiModelProperty(value = "发言时间戳")
     private long timeStamp; // 发言时间戳
 
+    @ApiModelProperty(value = "发言的北京时间")
     private String bjDate; // 发言北京时间
+
+    @Version
+    private Long version;
 
     public ChannelChat(String userId, String channelId, String chat) {
         this.userId = userId;

@@ -9,10 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import zyd.datacenter.Entities.Rank.*;
 import zyd.datacenter.Entities.User.User;
 import zyd.datacenter.Entities.User.UserScore;
-import zyd.datacenter.Repository.Rank.DayRankRepository;
-import zyd.datacenter.Repository.Rank.MonthRankRepository;
-import zyd.datacenter.Repository.Rank.RankRepository;
-import zyd.datacenter.Repository.Rank.WeekRankRepository;
+import zyd.datacenter.Repository.Rank.*;
 import zyd.datacenter.Repository.User.UserRepository;
 import zyd.datacenter.Repository.User.UserScoreRepository;
 import zyd.datacenter.Service.Rank.RankService;
@@ -28,21 +25,12 @@ public class RankServiceImpl implements RankService {
 
     private UserScoreRepository userScoreRepository;
 
-    private RankRepository rankRepository;
+    private RanksRepository ranksRepository;
 
-    private WeekRankRepository weekRankRepository;
-
-    private MonthRankRepository monthRankRepository;
-
-    private DayRankRepository dayRankRepository;
-
-    public RankServiceImpl(UserRepository userRepository, UserScoreRepository userScoreRepository, RankRepository rankRepository, WeekRankRepository weekRankRepository, MonthRankRepository monthRankRepository, DayRankRepository dayRankRepository) {
+    public RankServiceImpl(UserRepository userRepository, UserScoreRepository userScoreRepository, RanksRepository ranksRepository) {
         this.userRepository = userRepository;
         this.userScoreRepository = userScoreRepository;
-        this.rankRepository = rankRepository;
-        this.weekRankRepository = weekRankRepository;
-        this.monthRankRepository = monthRankRepository;
-        this.dayRankRepository = dayRankRepository;
+        this.ranksRepository = ranksRepository;
     }
 
     public void allRankScheduler(){
@@ -103,32 +91,25 @@ public class RankServiceImpl implements RankService {
     }
 
     public List<?> getRank(RankType rankType){
-        switch (rankType)
-        {
-            case RANK_DAY:
-                return dayRankRepository.findAll();
-            case RANK_WEEK:
-                return weekRankRepository.findAll();
-            case RANK_MONTH:
-                return monthRankRepository.findAll();
-            default:
-                return rankRepository.findAll();
-        }
+        return ranksRepository.findByRankType(rankType).getUserScoreList();
     }
 
     //@Transactional //(readOnly = false, isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
     public void Rank(RankType rankType){
         HashMap<String, Float> getScoreMap;
         Date date = new Date();
+        Ranks ranks = ranksRepository.findByRankType(rankType);
+        List<UserScore> userScoreList = ranks.getUserScoreList();
+        userScoreList.clear();
+
         switch (rankType)
         {
             case RANK_ALL: // 总榜直接算总分数即可
                 List<User> users = userRepository.findAll();
                 users.sort(comparatorUserScore);
-                rankRepository.deleteAll();
                 users.forEach(user -> {
-                    Rank rank = new Rank(user.getUsername(), user.getScore());
-                    rankRepository.save(rank);
+                    UserScore userScore = new UserScore(user.getUsername(), user.getScore());
+                    userScoreList.add(userScore);
                 });
                 break;
             case RANK_MONTH: // 月榜需要统计上一个月各个用户获取的积分
@@ -137,33 +118,22 @@ public class RankServiceImpl implements RankService {
                 // 统计特定时间内的分数
                 getScoreMap = getScoreMapByTime(thisMonthTimestamp, lastMonthTimestamp);
                 // 排序周榜并写入数据库
-                List<MonthRank> monthRanks = new LinkedList<MonthRank>();
                 for (Map.Entry<String, Float> entry : getScoreMap.entrySet()) {
-                    MonthRank weekRank = new MonthRank(entry.getKey(), entry.getValue());
-                    monthRanks.add(weekRank);
+                    UserScore userScore = new UserScore(entry.getKey(), entry.getValue());
+                    userScoreList.add(userScore);
                 }
-                monthRanks.sort(comparatorUserMonthScore);
-                monthRankRepository.deleteAll();
-                monthRanks.forEach(monthRank -> {
-                    monthRankRepository.save(monthRank);
-                });
+                userScoreList.sort(comparatorScore);
                 break;
             case RANK_WEEK: // 周榜需要统计上一周各个用户获取的积分
                 long thisWeekTimestamp = getThisWeekMonday(date);
                 long lastWeekTimestamp = getLastWeekMonday(date);
                 // 统计特定时间内的分数
                 getScoreMap = getScoreMapByTime(lastWeekTimestamp, thisWeekTimestamp);
-                // 排序周榜并写入数据库
-                List<WeekRank> weekRanks = new LinkedList<WeekRank>();
                 for (Map.Entry<String, Float> entry : getScoreMap.entrySet()) {
-                    WeekRank weekRank = new WeekRank(entry.getKey(), entry.getValue());
-                    weekRanks.add(weekRank);
+                    UserScore userScore = new UserScore(entry.getKey(), entry.getValue());
+                    userScoreList.add(userScore);
                 }
-                weekRanks.sort(comparatorUserWeekScore);
-                weekRankRepository.deleteAll();
-                weekRanks.forEach(weekRank -> {
-                    weekRankRepository.save(weekRank);
-                });
+                userScoreList.sort(comparatorScore);
                 break;
             case RANK_DAY: // 日榜需要统计上一天各个用户获取的积分
                 //计算当天零点时间戳
@@ -173,20 +143,18 @@ public class RankServiceImpl implements RankService {
                 // 统计特定时间内的分数
                 getScoreMap = getScoreMapByTime(lastDailyStartTime, dailyStartTime);
                 // 排序日榜并写入数据库
-                List<DayRank> dayRanks = new  LinkedList<DayRank>();
                 for (Map.Entry<String, Float> entry : getScoreMap.entrySet()) {
-                    DayRank dayRank = new DayRank(entry.getKey(), entry.getValue());
-                    dayRanks.add(dayRank);
+                    UserScore userScore = new UserScore(entry.getKey(), entry.getValue());
+                    userScoreList.add(userScore);
                 }
-                dayRanks.sort(comparatorUserDayScore);
-                dayRankRepository.deleteAll();
-                dayRanks.forEach(dayRank -> {
-                    dayRankRepository.save(dayRank);
-                });
+                userScoreList.sort(comparatorScore);
                 break;
             default:
                 return;
         }
+
+        ranks.setUserScoreList(userScoreList);
+        ranksRepository.save(ranks);
     }
 
     // 统计特定时间内的分数
@@ -294,6 +262,17 @@ public class RankServiceImpl implements RankService {
 
 
     // 分数比较器
+    Comparator<UserScore> comparatorScore = new Comparator <UserScore>(){
+        public int compare(UserScore user1,UserScore user2){
+            if (user1.getScore() < user2.getScore())
+                return 1;
+            else if (user1.getScore() > user2.getScore())
+                return -1;
+            else
+                return 0;
+        }
+    };
+
     Comparator<User> comparatorUserScore = new Comparator <User>(){
         public int compare(User user1,User user2){
             if (user1.getScore() < user2.getScore())
@@ -343,17 +322,17 @@ public class RankServiceImpl implements RankService {
 //        rankRepository.insert(new Rank("test", 1));
 //        rankRepository.insert(new Rank("test1", 2));
 
-        try {
-            Rank rank = rankRepository.findById("60542add8bb71d7e8b696b15").get();
-            rank.setUsername("aaa");
-            rankRepository.save(rank);
-            rank = rankRepository.findById("60542add8bb71d7e8b696b16").get();
-            rank.setUsername("bbb");
-            rankRepository.save(rank);
-        }catch (Exception e)
-        {
-            System.out.println(e.toString());
-        }
+//        try {
+//            Rank rank = rankRepository.findById("60542add8bb71d7e8b696b15").get();
+//            rank.setUsername("aaa");
+//            rankRepository.save(rank);
+//            rank = rankRepository.findById("60542add8bb71d7e8b696b16").get();
+//            rank.setUsername("bbb");
+//            rankRepository.save(rank);
+//        }catch (Exception e)
+//        {
+//            System.out.println(e.toString());
+//        }
 
     }
 }

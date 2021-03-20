@@ -1,11 +1,14 @@
 package zyd.datacenter.Entities.Environment;
 
+import io.swagger.annotations.ApiModel;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @Document(value = "Environment")
+@ApiModel(value="Environment", description="环境数据，存储环境数据，目前没有用")
 public class Environment {
     @Id
     private String id;
@@ -19,6 +22,9 @@ public class Environment {
     private Date date; // 时间
 
     private String mapId; // 地图编号
+
+    @Version
+    private Long version;
 
     public Environment(String envName) {
         this.envName = envName;

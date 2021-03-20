@@ -3,17 +3,18 @@ spring:
     name: spring-mongo-service
   data:
     mongodb:
-      host: localhost
-      database: TEST
-      port: 27017
-      replica-set-name: rs0
+#      host: localhost
+#      database: TEST
+#      port: 27017
+#      replica-set-name: rs0
 
-#      host: '${MONGO_HOST}'
-#      port: '${MONGO_PORT}'
-#      database: '${MONGO_DB}'
-#      username: '${MONGO_USERNAME}'
-#      password: '${MONGO_PASSWORD}'
-#      authentication-database: 'admin'
+      host: '${MONGO_HOST}'
+      port: '${MONGO_PORT}'
+      database: '${MONGO_DB}'
+      username: '${MONGO_USERNAME}'
+      password: '${MONGO_PASSWORD}'
+      authentication-database: 'admin'
+      replica-set-name: rs0
 #       uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:30602/${MONGO_DB}?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false
 
   mail:
@@ -53,8 +54,8 @@ server:
   tomcat:
     uri-encoding: utf-8
     max-http-form-post-size: 8096
-  port:
-    8081
+#  port:
+#    8081
 #  ssl:
 #    enabled: true
 #    key-store: src/main/resources/bootsecurity.p12

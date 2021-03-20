@@ -1,6 +1,9 @@
 package zyd.datacenter.Entities.User;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 import zyd.datacenter.Entities.Room.RoomType;
 import zyd.datacenter.Repository.User.UserRepository;
@@ -10,47 +13,70 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @Document(value = "UserInRoom")
+@ApiModel(value="UserInRoom", description="房间内玩家数据，存储房间内玩家的详细数据")
 public class UserInRoom {
     @Id
     private String id;
 
+    @ApiModelProperty(value = "战斗编号")
     private String gameId; // 战斗编号
 
+    @ApiModelProperty(value = "房间类型，ROOM_FREE->练习场，ROOM_SCORE->正式场，ROOM_AI->人机场")
     private RoomType roomType; // 房间类型
 
+    @ApiModelProperty(value = "房间编号")
     private String roomId; // 房间编号
 
+    @ApiModelProperty(value = "玩家用户名")
     private String username; // 玩家用户名
 
+    @ApiModelProperty(value = "开始时间")
     private Date beginTime; // 开始时间
 
-    private String bjBeginTime; // 开始时间
+    @ApiModelProperty(value = "开始北京时间")
+    private String bjBeginTime; // 开始北京时间
 
+    @ApiModelProperty(value = "开始时间戳")
     private long beginTimestamp; // 开始时间戳
 
-    private Date endTime; // 开始时间
+    @ApiModelProperty(value = "结束时间")
+    private Date endTime; // 结束时间
 
-    private String bjEndTime; // 开始时间
+    @ApiModelProperty(value = "结束北京时间")
+    private String bjEndTime; // 结束北京时间
 
-    private long endTimestamp; // 开始时间戳
+    @ApiModelProperty(value = "结束时间戳")
+    private long endTimestamp; // 结束时间戳
 
+    @ApiModelProperty(value = "玩家编号")
     private String userId; // 玩家编号
 
+    @ApiModelProperty(value = "玩家状态，0->未准备好，1->准备好等待开始，2->在进行游戏")
     private int state; // 玩家状态，0表示未准备好，1表示准备好等待开始，2表示在进行游戏
 
+    @ApiModelProperty(value = "玩家当前所在阵营编号")
     private String campId; // 玩家当前所在阵营编号
 
+    @ApiModelProperty(value = "玩家选择的武器编号")
     private String weaponId; // 玩家选择的武器编号
 
+    @ApiModelProperty(value = "玩家获得的分数")
     private float score; // 玩家获得的分数
 
+    @ApiModelProperty(value = "玩家的总伤害")
     private float damageValue; // 玩家的总伤害
 
+    @ApiModelProperty(value = "击毁数")
     private int destroyNum; // 击毁数
 
+    @ApiModelProperty(value = "坠毁数")
     private int crashNum; // 坠毁数
 
+    @ApiModelProperty(value = "战斗结果，0->失败，1->胜利，2->平局")
     private int result; // 0代表失败，1代表胜利，2代表平局
+
+    @Version
+    private Long version;
 
     public UserInRoom(String roomId, String userId)
     {

@@ -1,11 +1,14 @@
 package zyd.datacenter.Entities.Weapon;
 
+import io.swagger.annotations.ApiModel;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.File;
 
 @Document(value = "Weapons")
+@ApiModel(value="Weapons", description="武器数据，目前没有用")
 public class Weapon {
     @Id
     private String id;
@@ -25,6 +28,9 @@ public class Weapon {
     private float health; // 生命值
 
     private float lockLevel; // 可以获取的等级限制
+
+    @Version
+    private Long version;
 
     public Weapon(String weaponName, File file, float maxWeight, float maxVelocity, float oilStorage, float missileStorage, float health, float lockLevel) {
         this.weaponName = weaponName;

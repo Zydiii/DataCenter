@@ -19,6 +19,7 @@ public class Rank {
     @Version
     private Long version;
 
+
     public Rank(String username, float score) {
         this.username = username;
         this.score = score;

@@ -1,6 +1,7 @@
 package zyd.datacenter.Entities.User;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "Roles")
@@ -9,6 +10,9 @@ public class Role {
     private String id;
 
     private ERole name; // 角色名
+
+    @Version
+    private Long version;
 
     public Role() {
 

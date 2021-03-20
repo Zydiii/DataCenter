@@ -1,6 +1,9 @@
 package zyd.datacenter.Entities.Room;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 import zyd.datacenter.Entities.User.Spectator;
 import zyd.datacenter.Entities.User.User;
@@ -11,39 +14,58 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Document(value = "Room")
+@ApiModel(value="Room", description="房间数据，存储房间数据，包括房间内的用户数据")
 public class Room {
     @Id
     private String id;
 
+    @ApiModelProperty(value = "房间地址，目前只有一个服务器可以写死")
     private String ip; // 房间地址
 
+    @ApiModelProperty(value = "房间状态，0->空闲，1->房间内在进行游戏")
     private int state; // 房间状态，0表示房间空闲，1表示房间内在进行游戏
 
+    @ApiModelProperty(value = "房间当前人数")
     private int playerNum; // 房间当前人数
 
+    @ApiModelProperty(value = "房间最大人数")
     private int maxPlayerNum; // 房间最大人数
 
+    @ApiModelProperty(value = "房间内玩家详细数据")
     private Set<UserInRoom> users = new HashSet<>(); // 房间内玩家
 
+    @ApiModelProperty(value = "队伍数量")
     private int campNum; // 队伍数量
 
+    @ApiModelProperty(value = "房间内环境编号，目前没有用")
     private String environmentId; // 房间内环境编号
 
+    @ApiModelProperty(value = "房间当前战斗号，每次上一次战斗结束后会生成新的战斗号")
     private String gameId; // 当前房间战斗号
 
+    @ApiModelProperty(value = "房间创建者编号，只有创建者能够操作房间")
     private String ownerId; // 房间创建者编号
 
+    @ApiModelProperty(value = "房间创建者用户名")
     private String ownerUsername; // 房间创建者用户名
 
+    @ApiModelProperty(value = "最大观战者人数")
     private int maxSpectatorsNum; // 最大观战者人数
 
+    @ApiModelProperty(value = "当前观战者人数")
     private int spectatorsNum; // 当前观战者人数
 
+    @ApiModelProperty(value = "观战用户")
     private Set<Spectator> spectators = new HashSet<>();  // 观战用户
 
+    @ApiModelProperty(value = "更新频率")
     private float frequency; // 更新频率
 
+    @ApiModelProperty(value = "房间类型，ROOM_FREE->练习场，ROOM_SCORE->正式场，ROOM_AI->人机场")
     private RoomType roomType; // 房间类型
+
+    @Version
+    private Long version;
 
     public Room(String ip, int maxPlayerNum, int campNum, String environmentId, String ownerId, int maxSpectatorsNum, float frequency, RoomType roomType) {
         this.ip = ip;

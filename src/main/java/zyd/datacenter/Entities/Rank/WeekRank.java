@@ -1,6 +1,7 @@
 package zyd.datacenter.Entities.Rank;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,6 +15,9 @@ public class WeekRank {
 
     @Indexed(direction = IndexDirection.DESCENDING)
     private float score; // 按照降序存储玩家分数
+
+    @Version
+    private Long version;
 
     public WeekRank(String username, float score) {
         this.username = username;
