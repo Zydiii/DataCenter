@@ -22,6 +22,8 @@ public class ChannelChat {
     @ApiModelProperty(value = "用户编号")
     private String userId; // 用户编号
 
+    private String avatar; // 头像
+
     @ApiModelProperty(value = "用户名")
     private String username; // 用户名
 
@@ -55,6 +57,14 @@ public class ChannelChat {
         SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");     // 北京
         bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));  // 设置北京时区
         this.bjDate = bjSdf.format(this.date);
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getChannelName() {

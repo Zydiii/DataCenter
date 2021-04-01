@@ -1,11 +1,15 @@
 package zyd.datacenter.Service.Impl.User;
 
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import zyd.datacenter.Entities.User.User;
 import zyd.datacenter.Payload.Result;
 import zyd.datacenter.Repository.User.UserRepository;
 import zyd.datacenter.Service.User.UserService;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,4 +61,26 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findUser(String id){
         return userRepository.findById(id);
     }
+
+    public Result addPhoto(String userId, MultipartFile file)
+    {
+        User user = userRepository.findById(userId).get();
+        try {
+            user.setAvatar(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
+            user.setAvatarBase(Base64.getEncoder().encodeToString(user.getAvatar().getData()));
+        }
+        catch (Exception e)
+        {
+            return new Result(e.toString(), 0);
+        }
+        userRepository.save(user);
+        return new Result( Base64.getEncoder().encodeToString(user.getAvatar().getData()), 1);
+    }
+
+    public Result getPhoto(String userId)
+    {
+        User user  = userRepository.findById(userId).get();
+        return new Result(Base64.getEncoder().encodeToString(user.getAvatar().getData()), 1);
+    }
+
 }

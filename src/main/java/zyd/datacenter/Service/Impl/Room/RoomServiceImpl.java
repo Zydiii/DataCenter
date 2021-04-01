@@ -1,5 +1,6 @@
 package zyd.datacenter.Service.Impl.Room;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import zyd.datacenter.Entities.Game.GameHistory;
 import zyd.datacenter.Entities.Game.GameOverview;
@@ -24,6 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.time.FastDateFormat;
+import zyd.datacenter.Service.SequenceGenerator.SequenceGeneratorService;
 
 import java.util.*;
 
@@ -43,6 +45,9 @@ public class RoomServiceImpl implements RoomService {
 
     private UserScoreRepository userScoreRepository;
 
+    @Autowired
+    SequenceGeneratorService sequenceGenerator;
+
     public RoomServiceImpl(RoomRepository roomRepository, UserRepository userRepository, GameOverviewRepository gameOverviewRepository, GameHistoryRepository gameHistoryRepository, UserScoreRepository userScoreRepository) {
         this.roomRepository = roomRepository;
         this.userRepository = userRepository;
@@ -60,8 +65,15 @@ public class RoomServiceImpl implements RoomService {
         User user = userRepository.findById(room.getOwnerId()).get();
         room.setOwnerUsername(user.getUsername());
         //String gameId = getD(null);
-        String gameId = UUID.randomUUID().toString();
-        room.setGameId(gameId);
+        //String gameId = UUID.randomUUID().toString();
+
+        // 战斗编号
+        long gameId = sequenceGenerator.generateSequence(GameOverview.SEQUENCE_NAME);
+        room.setGameId(Long.toString(gameId));
+        // 房间编号
+        long roomId = sequenceGenerator.generateSequence(Room.SEQUENCE_NAME);
+        room.setId(Long.toString(roomId));
+
         roomRepository.insert(room);
         return new Result("创建成功", 1);
     }
@@ -98,6 +110,8 @@ public class RoomServiceImpl implements RoomService {
             }
             if(room.getPlayerNum() < room.getMaxPlayerNum()){
                 userInRoom.setUsername(user.getUsername());
+                userInRoom.setGameId(room.getGameId());
+                userInRoom.setAvatar(user.getAvatarBase());
                 room.addUser(userInRoom);
                 roomRepository.save(room);
                 user.setState(2);
@@ -260,7 +274,10 @@ public class RoomServiceImpl implements RoomService {
         room1.setState(0);
         room1.getUsers().clear();
         room1.getSpectators().clear();
-        room1.setGameId(UUID.randomUUID().toString());
+
+        long gameId = sequenceGenerator.generateSequence(GameOverview.SEQUENCE_NAME);
+        room1.setGameId(Long.toString(gameId));
+        //room1.setGameId(UUID.randomUUID().toString());
         roomRepository.save(room1);
 
         return new Result("ok", 1);

@@ -31,6 +31,7 @@ public class ChannelChatServiceImpl implements ChannelChatService {
         channelChat.setDate(new Date());
         User user = userRepository.findById(channelChat.getUserId()).get();
         channelChat.setUsername(user.getUsername());
+        channelChat.setAvatar(user.getAvatarBase());
         Channel channel = channelRepository.findByChannelName(channelChat.getChannelName());
         channelChat.setChannelId(channel.getId());
         channelChatRepository.insert(channelChat);

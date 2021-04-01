@@ -1,15 +1,13 @@
 package zyd.datacenter.Security.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.bson.types.Binary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import zyd.datacenter.Entities.User.User;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
@@ -18,6 +16,7 @@ public class UserDetailsImpl implements UserDetails {
     private String id;
 
     private String username;
+    private String avatar;
 
     private String email;
 
@@ -30,14 +29,16 @@ public class UserDetailsImpl implements UserDetails {
     private Set<String> realNames; // 玩家真实姓名
     private Set<String> realIds; // 玩家学号
 
+
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(String id, String username, String email, String phone, Set<String> roles, float score, int level, int EXP, Set<String> weapons, Set<String> realNames, Set<String> realIds, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(String id, String username, String avatar, String email, String phone, Set<String> roles, float score, int level, int EXP, Set<String> weapons, Set<String> realNames, Set<String> realIds, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
+        this.avatar = avatar;
         this.email = email;
         this.phone = phone;
         this.roles = roles;
@@ -57,9 +58,13 @@ public class UserDetailsImpl implements UserDetails {
                 .map(role -> new SimpleGrantedAuthority(role))
                 .collect(Collectors.toList());
 
+        if(user.getAvatarBase().length() == 0)
+            user.setAvatarBase("");
+
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),
+                user.getAvatarBase(),
                 user.getEmail(),
                 user.getPhone(),
                 user.getRoles(),
@@ -84,6 +89,14 @@ public class UserDetailsImpl implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @Override

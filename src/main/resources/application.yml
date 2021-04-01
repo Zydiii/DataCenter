@@ -3,18 +3,18 @@ spring:
     name: spring-mongo-service
   data:
     mongodb:
-#      host: localhost
-#      database: TEST
-#      port: 27017
-#      replica-set-name: rs0
-
-      host: '${MONGO_HOST}'
-      port: '${MONGO_PORT}'
-      database: '${MONGO_DB}'
-      username: '${MONGO_USERNAME}'
-      password: '${MONGO_PASSWORD}'
-      authentication-database: 'admin'
+      host: localhost
+      database: TEST
+      port: 27017
       replica-set-name: rs0
+
+#      host: '${MONGO_HOST}'
+#      port: '${MONGO_PORT}'
+#      database: '${MONGO_DB}'
+#      username: '${MONGO_USERNAME}'
+#      password: '${MONGO_PASSWORD}'
+#      authentication-database: 'admin'
+#      replica-set-name: rs0
 #       uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:30602/${MONGO_DB}?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false
 
   mail:
@@ -25,6 +25,11 @@ spring:
     properties:
       mail.smtp.ssl.enable: true #开启ssl 否则 503 错误
 
+  servlet:
+    multipart:
+      max-file-size: 256MB
+      max-request-size: 256MB
+      enabled: true
 
   cloud:
     kubernetes:

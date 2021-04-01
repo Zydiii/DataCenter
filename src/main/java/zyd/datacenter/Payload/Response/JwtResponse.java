@@ -1,5 +1,7 @@
 package zyd.datacenter.Payload.Response;
 
+import org.bson.types.Binary;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,6 +11,7 @@ public class JwtResponse {
     private String type = "Bearer";
     private String id;
     private String username;
+    private String avatar;
     private String email;
     private String phone;
     private List<String> roles;
@@ -21,10 +24,11 @@ public class JwtResponse {
     private int code; // 0为登录失败，1为登陆成功
     private String message; // 登录结果信息提示
 
-    public JwtResponse(String token, String id, String username, String email, String phone, float score, int level, int EXP, Set<String> weapons, Set<String> realNames, Set<String> realIds, List<String> roles, String message) {
+    public JwtResponse(String token, String id, String username, String avatar,String email, String phone, float score, int level, int EXP, Set<String> weapons, Set<String> realNames, Set<String> realIds, List<String> roles, String message) {
         this.token = token;
         this.id = id;
         this.username = username;
+        this.avatar = avatar;
         this.email = email;
         this.phone = phone;
         this.roles = roles;
@@ -42,6 +46,14 @@ public class JwtResponse {
     {
         this.code = 0;
         this.message = message;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getAccessToken() {

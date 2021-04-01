@@ -3,6 +3,7 @@ package zyd.datacenter.Entities.Game;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 import zyd.datacenter.Entities.Room.RoomType;
@@ -17,6 +18,9 @@ import java.util.Set;
 public class GameOverview {
     @Id
     private String id;
+
+    @Transient
+    public static final String SEQUENCE_NAME = "games_sequence";
 
     @ApiModelProperty(value = "战斗号")
     private String gameId; // 战斗号

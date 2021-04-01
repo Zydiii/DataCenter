@@ -1,27 +1,26 @@
 package zyd.datacenter.Service.Impl.Auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import zyd.datacenter.Entities.User.AvatarHelper;
 import zyd.datacenter.Entities.User.User;
 import zyd.datacenter.Payload.Request.LoginRequest;
 import zyd.datacenter.Payload.Request.SignupRequest;
 import zyd.datacenter.Payload.Response.JwtResponse;
-import zyd.datacenter.Payload.Response.MessageResponse;
 import zyd.datacenter.Payload.Result;
 import zyd.datacenter.Repository.User.UserRepository;
 import zyd.datacenter.Security.jwt.JwtUtils;
 import zyd.datacenter.Security.services.UserDetailsImpl;
 import zyd.datacenter.Service.Auth.AuthService;
 import zyd.datacenter.Service.Mail.MailService;
+import zyd.datacenter.Service.SequenceGenerator.SequenceGeneratorService;
 
 import java.util.List;
 import java.util.Set;
@@ -29,6 +28,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+    private SequenceGeneratorService sequenceGeneratorService;
+
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -43,6 +45,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     MailService mailService;
+
+    @Autowired
+    SequenceGeneratorService sequenceGenerator;
 
     public JwtResponse loginCheck (LoginRequest loginRequest) {
         if (userRepository.existsByUsername(loginRequest.getUsername())) {
@@ -66,6 +71,7 @@ public class AuthServiceImpl implements AuthService {
                 return new JwtResponse(jwt,
                         userDetails.getId(),
                         userDetails.getUsername(),
+                        userDetails.getAvatar(),
                         userDetails.getEmail(),
                         userDetails.getPhone(),
                         userDetails.getScore(),
@@ -112,6 +118,22 @@ public class AuthServiceImpl implements AuthService {
             Set<String> strRoles = signUpRequest.getRoles();
 
             user.setRoles(strRoles);
+
+            long id = sequenceGenerator.generateSequence(User.SEQUENCE_NAME);
+            user.setId(Long.toString(id));
+
+            String avatar = "";
+
+            try{
+                avatar = AvatarHelper.createBase64Avatar(Math.abs(user.getId().hashCode()));
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            user.setAvatarBase(avatar);
+
             userRepository.save(user);
 
             return ResponseEntity.ok("注册成功");

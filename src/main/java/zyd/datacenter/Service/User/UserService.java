@@ -4,6 +4,7 @@ import com.mongodb.MongoCommandException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import zyd.datacenter.Entities.User.User;
 import zyd.datacenter.Payload.Result;
 
@@ -11,6 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
+    @Transactional
+    @Retryable(value = MongoCommandException.class, maxAttempts = 10, backoff = @Backoff(delay = 100))
+    public Result addPhoto(String userId, MultipartFile file);
+
+    @Transactional
+    @Retryable(value = MongoCommandException.class, maxAttempts = 10, backoff = @Backoff(delay = 100))
+    public Result getPhoto(String userId);
+
     @Transactional
     @Retryable(value = MongoCommandException.class, maxAttempts = 10, backoff = @Backoff(delay = 100))
     public List<User> getAllUser();

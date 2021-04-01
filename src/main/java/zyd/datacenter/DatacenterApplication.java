@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import zyd.datacenter.Entities.User.AvatarHelper;
 
 
 @SpringBootApplication
@@ -25,10 +26,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableRetry
 public class DatacenterApplication {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
 
 		SpringApplication.run(DatacenterApplication.class, args);
-
 
 //		DocsConfig config = new DocsConfig();
 //		config.setProjectPath("C:\\Users\\Zydiii\\Desktop\\DataCenter"); // 项目根目录

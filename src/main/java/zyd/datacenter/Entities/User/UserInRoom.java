@@ -18,6 +18,8 @@ public class UserInRoom {
     @Id
     private String id;
 
+    private String avatar;
+
     @ApiModelProperty(value = "战斗编号")
     private String gameId; // 战斗编号
 
@@ -57,6 +59,9 @@ public class UserInRoom {
     @ApiModelProperty(value = "玩家当前所在阵营编号")
     private String campId; // 玩家当前所在阵营编号
 
+    @ApiModelProperty(value = "玩家当前所在阵营名称")
+    public String campName; // 玩家所在的阵营名称
+
     @ApiModelProperty(value = "玩家选择的武器编号")
     private String weaponId; // 玩家选择的武器编号
 
@@ -82,6 +87,22 @@ public class UserInRoom {
     {
         this.roomId = roomId;
         this.userId = userId;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getCampName() {
+        return campName;
+    }
+
+    public void setCampName(String campName) {
+        this.campName = campName;
     }
 
     public RoomType getRoomType() {

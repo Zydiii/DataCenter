@@ -24,7 +24,6 @@ public class AnnounceBoardController {
     @ApiOperation(value = "写入公告栏", notes = "管理员写入公告栏数据需要调用的接口")
     public ResponseEntity<?> writeAnnounce(@Valid @RequestBody @ApiParam("公告栏json数据，需要给text、userId") AnnouncementBoard announceBoard){
         Result result = announceBoardService.writeAnnounce(announceBoard);
-        System.out.println();
         return resultToResponse(result);
     }
 

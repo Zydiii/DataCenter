@@ -3,17 +3,27 @@ package zyd.datacenter.Entities.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.bson.types.Binary;
 
 @Document(collection = "Users")
 @ApiModel(value="Users", description="用户数据，用户的主要信息，包括账号、等级、分数等")
 public class User {
     @Id
     private String id;
+
+    @Transient
+    public static final String SEQUENCE_NAME = "users_sequence";
+
+    @ApiModelProperty(value = "头像")
+    private Binary avatar; // 用户头像
+
+    private String avatarBase = ""; // Base64
 
     @ApiModelProperty(value = "用户名")
     private String username; // 用户名
@@ -120,6 +130,14 @@ public class User {
         return phone;
     }
 
+    public String getAvatarBase() {
+        return avatarBase;
+    }
+
+    public void setAvatarBase(String avatarBase) {
+        this.avatarBase = avatarBase;
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
     }
@@ -194,5 +212,13 @@ public class User {
 
     public void setPairPassword(String pairPassword) {
         this.pairPassword = pairPassword;
+    }
+
+    public Binary getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Binary avatar) {
+        this.avatar = avatar;
     }
 }

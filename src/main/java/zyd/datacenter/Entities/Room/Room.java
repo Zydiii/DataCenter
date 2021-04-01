@@ -3,6 +3,7 @@ package zyd.datacenter.Entities.Room;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 import zyd.datacenter.Entities.User.Spectator;
@@ -18,6 +19,9 @@ import java.util.Set;
 public class Room {
     @Id
     private String id;
+
+    @Transient
+    public static final String SEQUENCE_NAME = "rooms_sequence";
 
     @ApiModelProperty(value = "房间地址，目前只有一个服务器可以写死")
     private String ip; // 房间地址
@@ -178,6 +182,17 @@ public class Room {
     }
 
     public void addUser(UserInRoom userInroom){
+        boolean found = false;
+        for(UserInRoom user : this.users)
+        {
+            if(user.getUserId().equals(userInroom.getUserId()))
+            {
+                found = true;
+                break;
+            }
+        }
+        if(found)
+            return;
         this.users.add(userInroom);
         this.playerNum++;
     }
