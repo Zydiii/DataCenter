@@ -11,12 +11,21 @@ import zyd.datacenter.Entities.User.User;
 import zyd.datacenter.Entities.User.UserInRoom;
 import zyd.datacenter.Payload.Result;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface RoomService {
     @Transactional
     @Retryable(value = MongoCommandException.class, maxAttempts = 10, backoff = @Backoff(delay = 100))
     public List<Room> getAllRoom();
+
+    @Transactional
+    @Retryable(value = MongoCommandException.class, maxAttempts = 10, backoff = @Backoff(delay = 100))
+    public String getIp(HttpServletRequest request);
+
+    @Transactional
+    @Retryable(value = MongoCommandException.class, maxAttempts = 10, backoff = @Backoff(delay = 100))
+    public Result joinCamp(UserInRoom userInRoom);
 
     @Transactional
     @Retryable(value = MongoCommandException.class, maxAttempts = 10, backoff = @Backoff(delay = 100))
@@ -32,7 +41,7 @@ public interface RoomService {
 
     @Transactional
     @Retryable(value = MongoCommandException.class, maxAttempts = 10, backoff = @Backoff(delay = 100))
-    public Result joinRoom(UserInRoom userInRoom);
+    public Result joinRoom(UserInRoom userInRoom, HttpServletRequest request);
 
     @Transactional
     @Retryable(value = MongoCommandException.class, maxAttempts = 10, backoff = @Backoff(delay = 100))

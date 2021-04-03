@@ -8,11 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import zyd.datacenter.Entities.Room.Room;
 import zyd.datacenter.Entities.Room.RoomType;
+import zyd.datacenter.Entities.User.IpUtil;
 import zyd.datacenter.Entities.User.Spectator;
 import zyd.datacenter.Entities.User.UserInRoom;
 import zyd.datacenter.Payload.Result;
 import zyd.datacenter.Service.Room.RoomService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -44,6 +46,19 @@ public class RoomController {
         return ResponseEntity.ok(roomService.getOneRoom(roomId));
     }
 
+    @RequestMapping(value = "/getIp", method = RequestMethod.POST)
+    @ResponseBody
+    public String getIp(HttpServletRequest request) {
+        return IpUtil.getIpAddr(request);
+    }
+
+    @PostMapping("/joinCamp")
+    @ApiOperation(value = "加入阵营", notes = "加入阵营")
+    public ResponseEntity<?> joinCamp(@Valid @RequestBody @ApiParam("房间json数据，至少需要给roomId、userId、campId") UserInRoom userInRoom)
+    {
+        return ResponseEntity.ok(roomService.joinCamp(userInRoom));
+    }
+
     @PostMapping("/createRoom")
     @ApiOperation(value = "创建房间", notes = "创建房间")
     public ResponseEntity<?> createRoom(@Valid @RequestBody @ApiParam("房间json数据，至少需要给ownerId、maxPlayerNum、maxSpectatorsNum、frequency、roomType") Room room)
@@ -67,9 +82,9 @@ public class RoomController {
 
     @PostMapping("/joinRoom")
     @ApiOperation(value = "加入房间", notes = "加入某个特定房间")
-    public ResponseEntity<?> joinRoom(@Valid @RequestBody @ApiParam("房间内用户json数据，至少需要给roomId、userId") UserInRoom userInRoom)
+    public ResponseEntity<?> joinRoom(HttpServletRequest request, @Valid @RequestBody @ApiParam("房间内用户json数据，至少需要给roomId、userId") UserInRoom userInRoom)
     {
-        return resultToResponse(roomService.joinRoom(userInRoom));
+        return resultToResponse(roomService.joinRoom(userInRoom, request));
     }
 
     @PostMapping("/leaveRoom")

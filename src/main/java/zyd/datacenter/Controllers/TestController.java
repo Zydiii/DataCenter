@@ -32,7 +32,7 @@ public class TestController {
         String maxNum = "5";
         String step = "2";
         String envId = "2";
-        String gameType = "ROOM_SCORE";
+        String gameType = "2";
         String playerNum = "3";
         String room = roomId + " " + maxNum + " " + step + " " + envId + " " + gameType + " " + playerNum + "\n";
 
@@ -42,7 +42,7 @@ public class TestController {
         String port = "8080";
         String inGame = "1";
         String flightId = "4";
-        String flightType = "FLIGHT";
+        String flightType = "0";
         String userInfo = userId + " " + campId + " " + host + " " + port + " " + inGame + " " + flightId + " " + flightType + "\n";
 
         String userId1 = "2";
@@ -51,7 +51,7 @@ public class TestController {
         String port1 = "8080";
         String inGame1 = "0";
         String flightId1 = "4";
-        String flightType1 = "FLIGHT";
+        String flightType1 = "0";
         String userInfo1 = userId1 + " " + campId1 + " " + host1 + " " + port1 + " " + inGame1 + " " + flightId1 + " " + flightType1 + "\n";
 
         String userId2 = "3";
@@ -60,7 +60,7 @@ public class TestController {
         String port2 = "8080";
         String inGame2 = "1";
         String flightId2 = "5";
-        String flightType2 = "FLIGHT";
+        String flightType2 = "1";
         String userInfo2 = userId2 + " " + campId2 + " " + host2 + " " + port2 + " " + inGame2 + " " + flightId2 + " " + flightType2 + "\n";
 
         String send = room + userInfo + userInfo1 + userInfo2;

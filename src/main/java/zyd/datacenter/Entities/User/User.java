@@ -23,6 +23,8 @@ public class User {
     @ApiModelProperty(value = "头像")
     private Binary avatar; // 用户头像
 
+    private String userIp;
+
     private String avatarBase = ""; // Base64
 
     @ApiModelProperty(value = "用户名")
@@ -84,6 +86,14 @@ public class User {
         this.level = 1;
         this.EXP = 0;
         this.state = 0;
+    }
+
+    public String getUserIp() {
+        return userIp;
+    }
+
+    public void setUserIp(String userIp) {
+        this.userIp = userIp;
     }
 
     public Set<String> getWeapons() {

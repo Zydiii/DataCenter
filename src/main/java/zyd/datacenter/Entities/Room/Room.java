@@ -12,6 +12,8 @@ import zyd.datacenter.Entities.User.UserInRoom;
 import zyd.datacenter.Repository.User.UserRepository;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Document(value = "Room")
@@ -32,6 +34,8 @@ public class Room {
     @ApiModelProperty(value = "房间当前人数")
     private int playerNum; // 房间当前人数
 
+    private int eachCampPlayNum; // 每个阵营人数
+
     @ApiModelProperty(value = "房间最大人数")
     private int maxPlayerNum; // 房间最大人数
 
@@ -43,6 +47,8 @@ public class Room {
 
     @ApiModelProperty(value = "房间内环境编号，目前没有用")
     private String environmentId; // 房间内环境编号
+
+    private String environmentName;
 
     @ApiModelProperty(value = "房间当前战斗号，每次上一次战斗结束后会生成新的战斗号")
     private String gameId; // 当前房间战斗号
@@ -68,6 +74,12 @@ public class Room {
     @ApiModelProperty(value = "房间类型，ROOM_FREE->练习场，ROOM_SCORE->正式场，ROOM_AI->人机场")
     private RoomType roomType; // 房间类型
 
+    private int digitalRoomType; //人机场 0, 练习场 1, 正式场 2
+
+    private List<Camp> camps = new LinkedList<>(); // 房间内所有阵营
+
+    private List<ExchangeCamp> exchangeCamps = new LinkedList<>(); // 交换阵营请求列表
+
     @Version
     private Long version;
 
@@ -83,6 +95,28 @@ public class Room {
         this.spectatorsNum = 0;
         this.frequency = frequency;
         this.roomType = roomType;
+    }
+
+    public void setDigitalRoomType(RoomType roomType)
+    {
+        if(roomType == RoomType.ROOM_FREE)
+            this.digitalRoomType = 1;
+        else if(roomType == RoomType.ROOM_AI)
+            this.digitalRoomType = 0;
+        else if(roomType == RoomType.ROOM_SCORE)
+            this.digitalRoomType = 2;
+    }
+
+    public String getEnvironmentName() {
+        return environmentName;
+    }
+
+    public void setEnvironmentName(String environmentName) {
+        this.environmentName = environmentName;
+    }
+
+    public int getDigitalRoomType() {
+        return digitalRoomType;
     }
 
     public String getOwnerUsername() {
@@ -181,6 +215,14 @@ public class Room {
         this.ownerId = ownerId;
     }
 
+    public int getEachCampPlayNum() {
+        return eachCampPlayNum;
+    }
+
+    public void setEachCampPlayNum(int eachCampPlayNum) {
+        this.eachCampPlayNum = eachCampPlayNum;
+    }
+
     public void addUser(UserInRoom userInroom){
         boolean found = false;
         for(UserInRoom user : this.users)
@@ -205,6 +247,8 @@ public class Room {
                 user.setCrashNum(userInRoom.getCrashNum());
                 user.setDestroyNum(userInRoom.getDestroyNum());
                 user.setResult(userInRoom.getResult());
+                // 阵营里面的用户状态也修改，虽然这样很奇怪。。。
+                camps.get(userInRoom.getCampId()).changeUser(user);
                 break;
             }
         }
@@ -229,6 +273,7 @@ public class Room {
         for(UserInRoom userInRoom: users){
             if(userInRoom.getUserId().equals(userId)){
                 userInRoom.setState(state);
+                camps.get(userInRoom.getCampId()).changeUserState(userInRoom);
                 break;
             }
         }
@@ -274,5 +319,33 @@ public class Room {
 
     public void setFrequency(float frequency) {
         this.frequency = frequency;
+    }
+
+    public void leaveCamp(UserInRoom userInRoom)
+    {
+        int campId = userInRoom.getCampId();
+        camps.get(campId).leaveCamp(userInRoom);
+    }
+
+    public void joinCamp(UserInRoom userInRoom)
+    {
+        int campId = userInRoom.getCampId();
+        camps.get(campId).joinCamp(userInRoom);
+    }
+
+    public List<Camp> getCamps() {
+        return camps;
+    }
+
+    public void setCamps(List<Camp> camps) {
+        this.camps = camps;
+    }
+
+    public List<ExchangeCamp> getExchangeCamps() {
+        return exchangeCamps;
+    }
+
+    public void setExchangeCamps(List<ExchangeCamp> exchangeCamps) {
+        this.exchangeCamps = exchangeCamps;
     }
 }

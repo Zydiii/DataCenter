@@ -31,6 +31,7 @@ public class AssetController {
     @GetMapping("/user/getLatest")
     @ApiOperation(value = "获取最新资源包信息", notes = "用户可以获取最新的资源包数据，不需要参数")
     public ResponseEntity<?> getLatestAnnounce(){
+
         return ResponseEntity.ok(assetService.getLatestAsset());
     }
 

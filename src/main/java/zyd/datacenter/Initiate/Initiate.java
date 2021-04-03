@@ -2,14 +2,17 @@ package zyd.datacenter.Initiate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import zyd.datacenter.Entities.Asset.Asset;
+import zyd.datacenter.Entities.Chat.Channel;
 import zyd.datacenter.Entities.Rank.RankType;
 import zyd.datacenter.Entities.Rank.Ranks;
+import zyd.datacenter.Entities.User.AvatarHelper;
 import zyd.datacenter.Entities.User.User;
+import zyd.datacenter.Repository.Asset.AssetRepository;
+import zyd.datacenter.Repository.Chat.ChannelRepository;
 import zyd.datacenter.Repository.Rank.RanksRepository;
 import zyd.datacenter.Repository.User.UserRepository;
-import zyd.datacenter.Service.Rank.RankService;
 
 import java.util.*;
 
@@ -25,6 +28,12 @@ public class Initiate implements CommandLineRunner {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ChannelRepository channelRepository;
+
+    @Autowired
+    private AssetRepository assetRepository;
 
     // 初始化排行榜数据库
     private void initiateRanks()
@@ -43,11 +52,38 @@ public class Initiate implements CommandLineRunner {
     {
         if(userRepository.findAll().isEmpty())
         {
-            userRepository.insert(new User("test0", "123456", "123456", "1", "1", new HashSet<String>(), new HashSet<String>(), new HashSet<String>()));
-            userRepository.insert(new User("test1", "123456", "123456", "1", "1", new HashSet<String>(), new HashSet<String>(), new HashSet<String>()));
-            userRepository.insert(new User("test2", "123456", "123456", "1", "1", new HashSet<String>(), new HashSet<String>(), new HashSet<String>()));
-            userRepository.insert(new User("test3", "123456", "123456", "1", "1", new HashSet<String>(), new HashSet<String>(), new HashSet<String>()));
-            userRepository.insert(new User("test4", "123456", "123456", "1", "1", new HashSet<String>(), new HashSet<String>(), new HashSet<String>()));
+            User user = new User("test0", "123456", "123456", "1", "1", new HashSet<String>(), new HashSet<String>(), new HashSet<String>());
+            String avatar = "";
+            try{
+                avatar = AvatarHelper.createBase64Avatar(Math.abs("default".hashCode()));
+            }
+            catch (Exception e)
+            {
+
+            }
+            user.setAvatarBase(avatar);
+
+            userRepository.insert(user);
+        }
+    }
+
+    // 初始化公共聊天频道
+    private void initiateChannel()
+    {
+        if(channelRepository.findAll().isEmpty())
+        {
+            channelRepository.insert(new Channel("公共频道1"));
+            channelRepository.insert(new Channel("公共频道2"));
+            channelRepository.insert(new Channel("公共频道3"));
+        }
+    }
+
+    // 初始化版本
+    private void initiateAsset()
+    {
+        if(assetRepository.findAll().isEmpty())
+        {
+            assetRepository.insert(new Asset("0.0.1", "", ""));
         }
     }
 
@@ -59,6 +95,9 @@ public class Initiate implements CommandLineRunner {
 
         // 初始化玩家数据库
         initiateTestUser();
+
+        initiateChannel();
+        initiateAsset();
 
         //rankService.test();
         // 总榜

@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import zyd.datacenter.Entities.Game.GameHistory;
 import zyd.datacenter.Entities.Game.GameOverview;
+import zyd.datacenter.Entities.Room.Camp;
 import zyd.datacenter.Entities.Room.Room;
 import zyd.datacenter.Entities.Room.RoomType;
-import zyd.datacenter.Entities.User.Spectator;
-import zyd.datacenter.Entities.User.User;
-import zyd.datacenter.Entities.User.UserInRoom;
-import zyd.datacenter.Entities.User.UserScore;
+import zyd.datacenter.Entities.User.*;
 import zyd.datacenter.Payload.Result;
 import zyd.datacenter.Repository.Game.GameHistoryRepository;
 import zyd.datacenter.Repository.Game.GameOverviewRepository;
@@ -27,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.lang3.time.FastDateFormat;
 import zyd.datacenter.Service.SequenceGenerator.SequenceGeneratorService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Service
@@ -56,6 +55,12 @@ public class RoomServiceImpl implements RoomService {
         this.userScoreRepository = userScoreRepository;
     }
 
+    public String getIp(HttpServletRequest request)
+    {
+        String ip = IpUtil.getIpAddr(request);
+        return ip;
+    }
+
     public List<Room> getAllRoom(){
         return roomRepository.findAll();
     }
@@ -74,8 +79,53 @@ public class RoomServiceImpl implements RoomService {
         long roomId = sequenceGenerator.generateSequence(Room.SEQUENCE_NAME);
         room.setId(Long.toString(roomId));
 
+        room.setDigitalRoomType(room.getRoomType());
+
+        // 初始化阵营参数
+        int campNum = room.getCampNum();
+        int eachCampNum = room.getEachCampPlayNum();
+        // 房间人数
+        room.setMaxPlayerNum(eachCampNum * campNum);
+        // 初始化阵营
+        List<Camp> camps = new LinkedList<>();
+        for(int i = 0; i < campNum; i++)
+        {
+            Camp camp = new Camp(i, eachCampNum);
+            camps.add(camp);
+        }
+        room.setCamps(camps);
+
         roomRepository.insert(room);
         return new Result("创建成功", 1);
+    }
+
+    public Result joinCamp(UserInRoom userInRoom){
+        Room room = roomRepository.findById(userInRoom.getRoomId()).get();
+        UserInRoom userInRoom1 = null;
+        for(UserInRoom user1 : room.getUsers())
+        {
+            if(user1.getUserId().equals(userInRoom.getUserId()))
+            {
+                userInRoom1 = user1;
+            }
+        }
+        if(userInRoom1 == null)
+            return new Result("fail", 0);
+        int toCampId = userInRoom.getCampId();
+        int fromCampId = userInRoom1.getCampId();
+        if(toCampId == fromCampId)
+            return new Result("操作无效", 1);
+        Camp toCamp = room.getCamps().get(toCampId);
+        Camp fromCamp = room.getCamps().get(fromCampId);
+        if(toCamp.getUserNum() < toCamp.getMaxUserNum())
+        {
+            toCamp.joinCamp(userInRoom1);
+            fromCamp.leaveCamp(userInRoom1);
+            userInRoom1.setCampId(toCampId);
+            userInRoom1.setCampName(toCamp.getCampName());
+        }
+        roomRepository.save(room);
+        return new Result("操作成功", 1);
     }
 
     public Result deleteRoom(Room questRoom){
@@ -98,9 +148,11 @@ public class RoomServiceImpl implements RoomService {
         }
     }
 
-    public Result joinRoom(UserInRoom userInRoom){
+    public Result joinRoom(UserInRoom userInRoom, HttpServletRequest request){
         Room room = roomRepository.findById(userInRoom.getRoomId()).get();
         User user = userRepository.findById(userInRoom.getUserId()).get();
+        String userIp = getIp(request);
+        user.setUserIp(userIp);
         if(room == null)
             return new Result("房间无效", 0);
         else{
@@ -112,8 +164,22 @@ public class RoomServiceImpl implements RoomService {
                 userInRoom.setUsername(user.getUsername());
                 userInRoom.setGameId(room.getGameId());
                 userInRoom.setAvatar(user.getAvatarBase());
+
+                // 为新加入的用户设置阵营
+                for(int i = 0; i < room.getCampNum(); i++)
+                {
+                    if(room.getCamps().get(i).getUserNum() < room.getCamps().get(i).getMaxUserNum())
+                    {
+                        room.getCamps().get(i).joinCamp(userInRoom);
+                        userInRoom.setCampId(room.getCamps().get(i).getCampId());
+                        userInRoom.setCampName(room.getCamps().get(i).getCampName());
+                        break;
+                    }
+                }
+
                 room.addUser(userInRoom);
                 roomRepository.save(room);
+
                 user.setState(2);
                 userRepository.save(user);
                 return new Result(room.getIp(), 1);
@@ -131,8 +197,10 @@ public class RoomServiceImpl implements RoomService {
         if(room == null)
             return new Result("房间无效", 0);
         else {
+            room.getCamps().get(userInRoom.getCampId()).leaveCamp(userInRoom);
             room.deleteUser(userInRoom.getUserId());
             roomRepository.save(room);
+
             user.setState(0);
             userRepository.save(user);
             return new Result("操作成功", 1);
@@ -177,6 +245,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public List<Room> getRoom(RoomType roomType){
+
         return roomRepository.findAllByRoomType(roomType);
     }
 
@@ -202,7 +271,7 @@ public class RoomServiceImpl implements RoomService {
         Date date = new Date();
 
         Room room = roomRepository.findById(userInRoom.getRoomId()).get();
-        if(room.getOwnerId().equals(userInRoom.getUserId())){
+        if(room.getRoomType().equals(RoomType.ROOM_SCORE) || room.getOwnerId().equals(userInRoom.getUserId())){
             Set<UserInRoom> users = room.getUsers();
             for(UserInRoom user: users){
                 if(user.getState() == 0){
@@ -274,6 +343,17 @@ public class RoomServiceImpl implements RoomService {
         room1.setState(0);
         room1.getUsers().clear();
         room1.getSpectators().clear();
+        room1.getCamps().clear();
+        // 初始化阵营
+        List<Camp> camps = new LinkedList<>();
+        for(int i = 0; i < room1.getCampNum(); i++)
+        {
+            Camp camp = new Camp(i, room1.getEachCampPlayNum());
+            camps.add(camp);
+        }
+        room1.setCamps(camps);
+
+        room1.getExchangeCamps().clear();
 
         long gameId = sequenceGenerator.generateSequence(GameOverview.SEQUENCE_NAME);
         room1.setGameId(Long.toString(gameId));

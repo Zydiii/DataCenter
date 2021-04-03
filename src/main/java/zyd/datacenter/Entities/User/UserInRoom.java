@@ -57,13 +57,17 @@ public class UserInRoom {
     private int state; // 玩家状态，0表示未准备好，1表示准备好等待开始，2表示在进行游戏
 
     @ApiModelProperty(value = "玩家当前所在阵营编号")
-    private String campId; // 玩家当前所在阵营编号
+    private int campId; // 玩家当前所在阵营编号，从 0->N-1编号
 
     @ApiModelProperty(value = "玩家当前所在阵营名称")
     public String campName; // 玩家所在的阵营名称
 
+    public int campState = 0; // 状态，非交换中 0，交换中 1
+
     @ApiModelProperty(value = "玩家选择的武器编号")
     private String weaponId; // 玩家选择的武器编号
+
+    private String weaponName;
 
     @ApiModelProperty(value = "玩家获得的分数")
     private float score; // 玩家获得的分数
@@ -87,6 +91,14 @@ public class UserInRoom {
     {
         this.roomId = roomId;
         this.userId = userId;
+    }
+
+    public String getWeaponName() {
+        return weaponName;
+    }
+
+    public void setWeaponName(String weaponName) {
+        this.weaponName = weaponName;
     }
 
     public String getAvatar() {
@@ -222,11 +234,11 @@ public class UserInRoom {
         this.state = state;
     }
 
-    public String getCampId() {
+    public int getCampId() {
         return campId;
     }
 
-    public void setCampId(String campId) {
+    public void setCampId(int campId) {
         this.campId = campId;
     }
 
