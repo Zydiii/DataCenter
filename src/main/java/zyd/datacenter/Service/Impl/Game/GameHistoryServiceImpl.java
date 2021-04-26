@@ -30,10 +30,13 @@ public class GameHistoryServiceImpl implements GameHistoryService {
         for(int i = 0; i < gameHistories.size(); i++)
         {
             GameOverview gameOverview = gameOverviewRepository.getByGameId(gameHistories.get(i).getGameId());
-            for(UserInRoom userInRoom : gameOverview.getUserInRoom()){
-                if(userInRoom.getUserId().equals(userId)){
-                    userInRooms.add(userInRoom);
-                    break;
+            if(gameOverview != null)
+            {
+                for(UserInRoom userInRoom : gameOverview.getUserInRoom()){
+                    if(userInRoom.getUserId().equals(userId)){
+                        userInRooms.add(userInRoom);
+                        break;
+                    }
                 }
             }
         }

@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface RoomRepository extends MongoRepository<Room, String> {
     List<Room> findAllByRoomType(RoomType roomType);
+    List<Room> findAllByOwnerIdAndRoomType(String id, RoomType type);
 }

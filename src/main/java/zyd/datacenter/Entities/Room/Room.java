@@ -69,7 +69,7 @@ public class Room {
     private Set<Spectator> spectators = new HashSet<>();  // 观战用户
 
     @ApiModelProperty(value = "更新频率")
-    private float frequency; // 更新频率
+    private int frequency; // 更新频率
 
     @ApiModelProperty(value = "房间类型，ROOM_FREE->练习场，ROOM_SCORE->正式场，ROOM_AI->人机场")
     private RoomType roomType; // 房间类型
@@ -83,7 +83,7 @@ public class Room {
     @Version
     private Long version;
 
-    public Room(String ip, int maxPlayerNum, int campNum, String environmentId, String ownerId, int maxSpectatorsNum, float frequency, RoomType roomType) {
+    public Room(String ip, int maxPlayerNum, int campNum, String environmentId, String ownerId, int maxSpectatorsNum, int frequency, RoomType roomType) {
         this.ip = ip;
         this.state = 0;
         this.playerNum = 0;
@@ -242,13 +242,18 @@ public class Room {
     public void changeUser(UserInRoom userInRoom){
         for(UserInRoom user: users){
             if(user.getUserId().equals(userInRoom.getUserId())){
-                user.setScore(userInRoom.getScore());
-                user.setDamageValue(userInRoom.getDamageValue());
-                user.setCrashNum(userInRoom.getCrashNum());
-                user.setDestroyNum(userInRoom.getDestroyNum());
-                user.setResult(userInRoom.getResult());
+                if(userInRoom.getScore() != 0)
+                    user.setScore(user.getScore() + userInRoom.getScore());
+                if(userInRoom.getDamageValue() != 0)
+                    user.setDamageValue(user.getDamageValue() + userInRoom.getDamageValue());
+                if(userInRoom.getCrashNum() != 0)
+                    user.setCrashNum(user.getCrashNum() + userInRoom.getCrashNum());
+                if(userInRoom.getDestroyNum() != 0)
+                    user.setDestroyNum(user.getDestroyNum() + userInRoom.getDestroyNum());
+                if(userInRoom.getResult() != 0)
+                    user.setResult(userInRoom.getResult());
                 // 阵营里面的用户状态也修改，虽然这样很奇怪。。。
-                camps.get(userInRoom.getCampId()).changeUser(user);
+                camps.get(userInRoom.getCampId()).changeUser(userInRoom);
                 break;
             }
         }
@@ -313,11 +318,11 @@ public class Room {
         this.spectators = spectators;
     }
 
-    public float getFrequency() {
+    public int getFrequency() {
         return frequency;
     }
 
-    public void setFrequency(float frequency) {
+    public void setFrequency(int frequency) {
         this.frequency = frequency;
     }
 

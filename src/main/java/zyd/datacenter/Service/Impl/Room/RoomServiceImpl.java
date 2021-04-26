@@ -1,7 +1,9 @@
 package zyd.datacenter.Service.Impl.Room;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import zyd.datacenter.Entities.Game.GameHistory;
 import zyd.datacenter.Entities.Game.GameOverview;
 import zyd.datacenter.Entities.Room.Camp;
@@ -66,8 +68,26 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public Result createRoom(Room room){
-        room.setIp(allocatRoom());
+
+        // 目前只允许一个玩家用户创建一个房间
         User user = userRepository.findById(room.getOwnerId()).get();
+
+        Set<String> roles = user.getRoles();
+        boolean isAdmin = false;
+        for(String role : roles)
+        {
+            if(role.equals("ROLE_ADMIN"))
+            {
+                isAdmin = true;
+                break;
+            }
+        }
+
+        if(!isAdmin && roomRepository.findAllByOwnerIdAndRoomType(room.getOwnerId(), room.getRoomType()).size() > 0)
+            return new Result("你已经创建过一个该类型房间了哦，请不要重复创建", 0);
+
+        // 管理员可以创建多个房间
+        room.setIp(allocatRoom());
         room.setOwnerUsername(user.getUsername());
         //String gameId = getD(null);
         //String gameId = UUID.randomUUID().toString();
@@ -114,7 +134,7 @@ public class RoomServiceImpl implements RoomService {
         int toCampId = userInRoom.getCampId();
         int fromCampId = userInRoom1.getCampId();
         if(toCampId == fromCampId)
-            return new Result("操作无效", 1);
+            return new Result("操作无效", 0);
         Camp toCamp = room.getCamps().get(toCampId);
         Camp fromCamp = room.getCamps().get(fromCampId);
         if(toCamp.getUserNum() < toCamp.getMaxUserNum())
@@ -130,6 +150,12 @@ public class RoomServiceImpl implements RoomService {
 
     public Result deleteRoom(Room questRoom){
         if(checkOwner(questRoom)){
+            Room room = roomRepository.findById(questRoom.getId()).get();
+
+            // 房间内还有人不能直接删除
+            if(room.getPlayerNum() > 0)
+                return new Result("房间内还有玩家，请玩家数为 0 后重试", 0);
+
             roomRepository.deleteById(questRoom.getId());
             return new Result("操作成功", 1);
         }
@@ -140,6 +166,12 @@ public class RoomServiceImpl implements RoomService {
 
     public Result updateRoom(Room questRoom){
         if(checkOwner(questRoom)){
+            Room room = roomRepository.findById(questRoom.getId()).get();
+
+            // 房间内还有人不能直接修改
+            if(room.getPlayerNum() > 0)
+                return new Result("房间内还有玩家，请玩家数为 0 后重试", 0);
+
             roomRepository.save(questRoom);
             return new Result("操作成功", 1);
         }
@@ -164,21 +196,34 @@ public class RoomServiceImpl implements RoomService {
                 userInRoom.setUsername(user.getUsername());
                 userInRoom.setGameId(room.getGameId());
                 userInRoom.setAvatar(user.getAvatarBase());
+                if(userInRoom.getWeaponName() == null)
+                    userInRoom.setWeaponName("0");
 
-                // 为新加入的用户设置阵营
-                for(int i = 0; i < room.getCampNum(); i++)
+                boolean foundUser = false;
+                for(UserInRoom userInRoom1 : room.getUsers())
                 {
-                    if(room.getCamps().get(i).getUserNum() < room.getCamps().get(i).getMaxUserNum())
-                    {
-                        room.getCamps().get(i).joinCamp(userInRoom);
-                        userInRoom.setCampId(room.getCamps().get(i).getCampId());
-                        userInRoom.setCampName(room.getCamps().get(i).getCampName());
-                        break;
-                    }
+                    if(userInRoom1.getUserId().equals(userInRoom.getUserId()))
+                        foundUser = true;
                 }
 
-                room.addUser(userInRoom);
-                roomRepository.save(room);
+                // 为新加入的用户设置阵营
+                if(!foundUser)
+                {
+                    for(int i = 0; i < room.getCampNum(); i++)
+                    {
+                        if(room.getCamps().get(i).getUserNum() < room.getCamps().get(i).getMaxUserNum())
+                        {
+                            room.getCamps().get(i).joinCamp(userInRoom);
+                            userInRoom.setCampId(room.getCamps().get(i).getCampId());
+                            userInRoom.setCampName(room.getCamps().get(i).getCampName());
+                            userInRoom.setWeaponId(userInRoom.getWeaponName());
+                            break;
+                        }
+                    }
+                    room.addUser(userInRoom);
+                    roomRepository.save(room);
+
+                }
 
                 user.setState(2);
                 userRepository.save(user);
@@ -197,13 +242,31 @@ public class RoomServiceImpl implements RoomService {
         if(room == null)
             return new Result("房间无效", 0);
         else {
-            room.getCamps().get(userInRoom.getCampId()).leaveCamp(userInRoom);
-            room.deleteUser(userInRoom.getUserId());
-            roomRepository.save(room);
+            boolean found = false;
+            int campId = 0;
+            for(UserInRoom userInRoom1 : room.getUsers())
+            {
+                if(userInRoom1.getUserId().equals(userInRoom.getUserId()))
+                {
+                    campId = userInRoom1.getCampId();
+                    found = true;
+                }
+            }
+            if(found)
+            {
+                room.getCamps().get(campId).leaveCamp(userInRoom);
+                room.deleteUser(userInRoom.getUserId());
+                roomRepository.save(room);
 
-            user.setState(0);
-            userRepository.save(user);
-            return new Result("操作成功", 1);
+                user.setState(0);
+                userRepository.save(user);
+                return new Result("操作成功", 1);
+            }
+            else
+            {
+                return new Result("操作失败", 0);
+            }
+
         }
     }
 
@@ -278,18 +341,49 @@ public class RoomServiceImpl implements RoomService {
                     return new Result("有玩家未准备，请稍后重试", 0);
                 }
             }
+            List<Camp> camps = room.getCamps();
+            for(Camp camp : camps)
+            {
+                if(camp.getUserNum() == 0)
+                {
+                    return new Result("阵营人数不能为 0， 请稍后重试", 0);
+                }
+            }
+
+            String userInfoToSend = "";
             for(UserInRoom user: users){
                 user.setState(2);
                 user.setBeginTime(date);
                 user.setGameId(room.getGameId());
                 user.setRoomType(room.getRoomType());
+
+                User userDetail = userRepository.findById(user.getUserId()).get();
+
+                userInfoToSend += user.getUserId() + " " + user.getCampId() + " " + userDetail.getUserIp() + " " + "8080" + " " + "1" + " " + user.getWeaponId() + " " + user.getWeaponId() + "\n";
             }
+
             //room.setUsers(users);
             room.setState(1);
 
             GameOverview gameOverview = new GameOverview(room.getIp(), date, room.getRoomType(), room.getUsers());
             // 战斗号
             gameOverview.setGameId(room.getGameId());
+
+
+
+            // 给战斗服务器发消息
+            String roomInfoToSend = room.getId() + " " + room.getMaxPlayerNum() + " "  + "1" + " " + "0" + " " + room.getDigitalRoomType() + " " + room.getPlayerNum() + " "  + room.getGameId() + "\n";
+            String send = roomInfoToSend + userInfoToSend;
+
+            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<String> request = new HttpEntity<>(send);//将对象装入HttpEntity中
+
+//            try{
+//                String info = restTemplate.postForObject("http://10.0.0.24:30604", request, String.class);
+//            }catch (Exception e)
+//            {
+//                return new Result(e.toString(), 0);
+//            }
 
             roomRepository.save(room);
             gameOverviewRepository.insert(gameOverview);
@@ -304,9 +398,17 @@ public class RoomServiceImpl implements RoomService {
     // 对局中需要实时修改房间内用户状态
     public Result changeScore(UserInRoom userInRoom){
         Room room = roomRepository.findById(userInRoom.getRoomId()).get();
-        room.changeUser(userInRoom);
-        roomRepository.save(room);
-        return new Result("Ok", 1);
+        for(UserInRoom userInRoom1 : room.getUsers())
+        {
+            if(userInRoom1.getUserId().equals(userInRoom.getUserId()))
+            {
+                userInRoom.setCampId(userInRoom1.getCampId());
+                room.changeUser(userInRoom);
+                roomRepository.save(room);
+                return new Result("Ok", 1);
+            }
+        }
+        return new Result("没有该用户", 1);
     }
 
     public Result endGame(Room room){
@@ -314,7 +416,8 @@ public class RoomServiceImpl implements RoomService {
         // 写入对局总览
         Date date = new Date();
         GameOverview gameOverview = gameOverviewRepository.getByGameId(room1.getGameId());
-        gameOverview.setEndTime(date);
+        if(gameOverview != null)
+          gameOverview.setEndTime(date);
 
         // 存储每个用户的历史记录
         for(UserInRoom userInRoom: room1.getUsers()){
@@ -334,8 +437,12 @@ public class RoomServiceImpl implements RoomService {
             userScoreRepository.insert(userScore);
         }
 
-        gameOverview.setUserInRoom(room1.getUsers());
-        gameOverviewRepository.save(gameOverview);
+        if(gameOverview != null)
+        {
+            gameOverview.setUserInRoom(room1.getUsers());
+            gameOverviewRepository.save(gameOverview);
+        }
+
         // 恢复房间状态
         room1.setGameId("");
         room1.setPlayerNum(0);

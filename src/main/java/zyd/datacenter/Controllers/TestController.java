@@ -34,7 +34,8 @@ public class TestController {
         String envId = "2";
         String gameType = "2";
         String playerNum = "3";
-        String room = roomId + " " + maxNum + " " + step + " " + envId + " " + gameType + " " + playerNum + "\n";
+        String gameId = "1";
+        String room = roomId + " " + maxNum + " " + step + " " + envId + " " + gameType + " " + playerNum + " " + gameId + "\n";
 
         String userId = "1";
         String campId = "4";

@@ -56,14 +56,14 @@ public class RoomController {
     @ApiOperation(value = "加入阵营", notes = "加入阵营")
     public ResponseEntity<?> joinCamp(@Valid @RequestBody @ApiParam("房间json数据，至少需要给roomId、userId、campId") UserInRoom userInRoom)
     {
-        return ResponseEntity.ok(roomService.joinCamp(userInRoom));
+        return resultToResponse(roomService.joinCamp(userInRoom));
     }
 
     @PostMapping("/createRoom")
     @ApiOperation(value = "创建房间", notes = "创建房间")
     public ResponseEntity<?> createRoom(@Valid @RequestBody @ApiParam("房间json数据，至少需要给ownerId、maxPlayerNum、maxSpectatorsNum、frequency、roomType") Room room)
     {
-        return ResponseEntity.ok(roomService.createRoom(room));
+        return resultToResponse(roomService.createRoom(room));
     }
 
     @PostMapping("/deleteRoom")
@@ -82,7 +82,7 @@ public class RoomController {
 
     @PostMapping("/joinRoom")
     @ApiOperation(value = "加入房间", notes = "加入某个特定房间")
-    public ResponseEntity<?> joinRoom(HttpServletRequest request, @Valid @RequestBody @ApiParam("房间内用户json数据，至少需要给roomId、userId") UserInRoom userInRoom)
+    public ResponseEntity<?> joinRoom(HttpServletRequest request, @Valid @RequestBody @ApiParam("房间内用户json数据，至少需要给roomId、userId和weaponName") UserInRoom userInRoom)
     {
         return resultToResponse(roomService.joinRoom(userInRoom, request));
     }
@@ -112,14 +112,14 @@ public class RoomController {
     @ApiOperation(value = "准备", notes = "在房间内准备")
     public ResponseEntity<?> readyInRoom(@Valid @RequestBody @ApiParam("房间内用户json数据，至少需要给roomId、userId") UserInRoom userInRoom)
     {
-        return ResponseEntity.ok(roomService.readyInRoom(userInRoom));
+        return resultToResponse(roomService.readyInRoom(userInRoom));
     }
 
     @PostMapping("/cancelReadyInRoom")
     @ApiOperation(value = "取消准备", notes = "在房间内准备")
     public ResponseEntity<?> cancelReadyInRoom(@Valid @RequestBody @ApiParam("房间内用户json数据，至少需要给roomId、userId") UserInRoom userInRoom)
     {
-        return ResponseEntity.ok(roomService.cancelReadyInRoom(userInRoom));
+        return resultToResponse(roomService.cancelReadyInRoom(userInRoom));
     }
 
     public ResponseEntity<?> resultToResponse(Result result)

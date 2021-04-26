@@ -96,10 +96,11 @@ public class Camp {
                 break;
             }
         }
-        if(found)
-            return;
-        this.usersInCamp.add(user);
-        this.userNum++;
+        if(!found)
+        {
+            this.usersInCamp.add(user);
+            this.userNum++;
+        }
     }
 
     public void changeUserState(UserInRoom user)
@@ -115,11 +116,16 @@ public class Camp {
     public void changeUser(UserInRoom userInRoom){
         for(UserInRoom user: usersInCamp){
             if(user.getUserId().equals(userInRoom.getUserId())){
-                user.setScore(userInRoom.getScore());
-                user.setDamageValue(userInRoom.getDamageValue());
-                user.setCrashNum(userInRoom.getCrashNum());
-                user.setDestroyNum(userInRoom.getDestroyNum());
-                user.setResult(userInRoom.getResult());
+                if(userInRoom.getScore() != 0)
+                    user.setScore(user.getScore() + userInRoom.getScore());
+                if(userInRoom.getDamageValue() != 0)
+                    user.setDamageValue(user.getDamageValue() + userInRoom.getDamageValue());
+                if(userInRoom.getCrashNum() != 0)
+                    user.setCrashNum(user.getCrashNum() + userInRoom.getCrashNum());
+                if(userInRoom.getDestroyNum() != 0)
+                    user.setDestroyNum(user.getDestroyNum() + userInRoom.getDestroyNum());
+                if(userInRoom.getResult() != 0)
+                    user.setResult(userInRoom.getResult());
                 break;
             }
         }
