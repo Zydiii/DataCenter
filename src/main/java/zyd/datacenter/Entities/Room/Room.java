@@ -80,6 +80,16 @@ public class Room {
 
     private List<ExchangeCamp> exchangeCamps = new LinkedList<>(); // 交换阵营请求列表
 
+    private int maxTrainNum;
+
+    private int trainedNum;
+
+    private int winUserId;
+
+    private int winCampId;
+
+    private int forceEnd; // 0 -> 检查 trainNum，正常结束，1 -> 不检查 trainNUm，掉线
+
     @Version
     private Long version;
 
@@ -95,6 +105,15 @@ public class Room {
         this.spectatorsNum = 0;
         this.frequency = frequency;
         this.roomType = roomType;
+        this.trainedNum = 0;
+    }
+
+    public int getForceEnd() {
+        return forceEnd;
+    }
+
+    public void setForceEnd(int forceEnd) {
+        this.forceEnd = forceEnd;
     }
 
     public void setDigitalRoomType(RoomType roomType)
@@ -105,6 +124,38 @@ public class Room {
             this.digitalRoomType = 0;
         else if(roomType == RoomType.ROOM_SCORE)
             this.digitalRoomType = 2;
+    }
+
+    public int getTrainedNum() {
+        return trainedNum;
+    }
+
+    public void setTrainedNum(int trainedNum) {
+        this.trainedNum = trainedNum;
+    }
+
+    public int getMaxTrainNum() {
+        return maxTrainNum;
+    }
+
+    public void setMaxTrainNum(int maxTrainNum) {
+        this.maxTrainNum = maxTrainNum;
+    }
+
+    public int getWinUserId() {
+        return winUserId;
+    }
+
+    public void setWinUserId(int winUserId) {
+        this.winUserId = winUserId;
+    }
+
+    public int getWinCampId() {
+        return winCampId;
+    }
+
+    public void setWinCampId(int winCampId) {
+        this.winCampId = winCampId;
     }
 
     public String getEnvironmentName() {

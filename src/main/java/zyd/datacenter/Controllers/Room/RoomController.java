@@ -150,6 +150,8 @@ public class RoomController {
     @ApiOperation(value = "结束战斗", notes = "房主才能调用此接口")
     public ResponseEntity<?> endGame(@Valid @RequestBody @ApiParam("房间json数据，至少需要给id") Room room)
     {
+        System.out.println("get end");
         return resultToResponse(roomService.endGame(room));
+
     }
 }

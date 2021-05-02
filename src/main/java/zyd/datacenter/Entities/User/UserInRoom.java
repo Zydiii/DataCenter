@@ -82,7 +82,7 @@ public class UserInRoom {
     private int crashNum; // 坠毁数
 
     @ApiModelProperty(value = "战斗结果，0->失败，1->胜利，2->平局")
-    private int result; // -1代表失败，1代表胜利，2代表平局
+    private int result; // 0代表失败，1代表胜利，2代表平局
 
     @Version
     private Long version;
@@ -91,6 +91,15 @@ public class UserInRoom {
     {
         this.roomId = roomId;
         this.userId = userId;
+    }
+
+    public void clearSelf()
+    {
+        this.score = 0;
+        this.crashNum = 0;
+        this.damageValue = 0;
+        this.destroyNum = 0;
+        this.result = 0;
     }
 
     public String getWeaponName() {

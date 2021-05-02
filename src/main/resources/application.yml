@@ -3,10 +3,15 @@ spring:
     name: spring-mongo-service
   data:
     mongodb:
-      host: 10.0.12.4
-      database: DataCenter
+      host: 127.0.0.1
+      database: TEST
       port: 27017
-      replica-set-name: my-mongo-set
+      replica-set-name: rs0
+
+#      host: 10.0.12.4
+#      database: DataCenter
+#      port: 27017
+#      replica-set-name: my-mongo-set
 
 #      host: '${MONGO_HOST}'
 #      port: '${MONGO_PORT}'

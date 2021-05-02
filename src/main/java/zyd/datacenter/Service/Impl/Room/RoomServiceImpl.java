@@ -83,7 +83,7 @@ public class RoomServiceImpl implements RoomService {
             }
         }
 
-        if(!isAdmin && roomRepository.findAllByOwnerIdAndRoomType(room.getOwnerId(), room.getRoomType()).size() > 0)
+        if(!isAdmin && roomRepository.findAllByOwnerIdAndRoomType(room.getOwnerId(), room.getRoomType()).size() > 10)
             return new Result("你已经创建过一个该类型房间了哦，请不要重复创建", 0);
 
         // 管理员可以创建多个房间
@@ -188,51 +188,119 @@ public class RoomServiceImpl implements RoomService {
         if(room == null)
             return new Result("房间无效", 0);
         else{
-            if(room.getState() == 1)
+            boolean inRoom = false;
+            Set<UserInRoom> usersInRoom = room.getUsers();
+            for(UserInRoom userInRoom1 : usersInRoom)
             {
-                return new Result("不能加入已经开始的房间", 0);
+                if(userInRoom1.getUserId().equals(userInRoom.getUserId()))
+                {
+                    inRoom = true;
+                    break;
+                }
             }
-            if(room.getPlayerNum() < room.getMaxPlayerNum()){
-                userInRoom.setUsername(user.getUsername());
-                userInRoom.setGameId(room.getGameId());
-                userInRoom.setAvatar(user.getAvatarBase());
-                if(userInRoom.getWeaponName() == null)
-                    userInRoom.setWeaponName("0");
-
-                boolean foundUser = false;
-                for(UserInRoom userInRoom1 : room.getUsers())
+            // 如果之前不在这个房间
+            if(!inRoom)
+            {
+                if(room.getState() == 1)
                 {
-                    if(userInRoom1.getUserId().equals(userInRoom.getUserId()))
-                        foundUser = true;
+                    return new Result("不能加入已经开始的房间", 0);
                 }
-
-                // 为新加入的用户设置阵营
-                if(!foundUser)
+                else if(room.getPlayerNum() >= room.getMaxPlayerNum())
                 {
-                    for(int i = 0; i < room.getCampNum(); i++)
+                    return new Result("房间已满", 0);
+                }
+                else
+                {
+                    userInRoom.setUsername(user.getUsername());
+                    userInRoom.setGameId(room.getGameId());
+                    userInRoom.setAvatar(user.getAvatarBase());
+                    if(userInRoom.getWeaponName() == null)
+                        userInRoom.setWeaponName("0");
+
+                    boolean foundUser = false;
+                    for(UserInRoom userInRoom1 : room.getUsers())
                     {
-                        if(room.getCamps().get(i).getUserNum() < room.getCamps().get(i).getMaxUserNum())
-                        {
-                            room.getCamps().get(i).joinCamp(userInRoom);
-                            userInRoom.setCampId(room.getCamps().get(i).getCampId());
-                            userInRoom.setCampName(room.getCamps().get(i).getCampName());
-                            userInRoom.setWeaponId(userInRoom.getWeaponName());
-                            break;
-                        }
+                        if(userInRoom1.getUserId().equals(userInRoom.getUserId()))
+                            foundUser = true;
                     }
-                    room.addUser(userInRoom);
-                    roomRepository.save(room);
 
+                    // 为新加入的用户设置阵营
+                    if(!foundUser)
+                    {
+                        for(int i = 0; i < room.getCampNum(); i++)
+                        {
+                            if(room.getCamps().get(i).getUserNum() < room.getCamps().get(i).getMaxUserNum())
+                            {
+                                room.getCamps().get(i).joinCamp(userInRoom);
+                                userInRoom.setCampId(room.getCamps().get(i).getCampId());
+                                userInRoom.setCampName(room.getCamps().get(i).getCampName());
+                                userInRoom.setWeaponId(userInRoom.getWeaponName());
+                                break;
+                            }
+                        }
+                        room.addUser(userInRoom);
+                        roomRepository.save(room);
+
+                    }
+
+                    user.setState(2);
+                    userRepository.save(user);
+                    return new Result(room.getIp(), 1);
                 }
-
+            }
+            // 如果之前在这个房间
+            else
+            {
                 user.setState(2);
                 userRepository.save(user);
                 return new Result(room.getIp(), 1);
             }
-            else
-            {
-                return new Result("房间已满", 0);
-            }
+
+//            if(room.getState() == 1)
+//            {
+//                return new Result("不能加入已经开始的房间", 0);
+//            }
+//            if(room.getPlayerNum() < room.getMaxPlayerNum()){
+//                userInRoom.setUsername(user.getUsername());
+//                userInRoom.setGameId(room.getGameId());
+//                userInRoom.setAvatar(user.getAvatarBase());
+//                if(userInRoom.getWeaponName() == null)
+//                    userInRoom.setWeaponName("0");
+//
+//                boolean foundUser = false;
+//                for(UserInRoom userInRoom1 : room.getUsers())
+//                {
+//                    if(userInRoom1.getUserId().equals(userInRoom.getUserId()))
+//                        foundUser = true;
+//                }
+//
+//                // 为新加入的用户设置阵营
+//                if(!foundUser)
+//                {
+//                    for(int i = 0; i < room.getCampNum(); i++)
+//                    {
+//                        if(room.getCamps().get(i).getUserNum() < room.getCamps().get(i).getMaxUserNum())
+//                        {
+//                            room.getCamps().get(i).joinCamp(userInRoom);
+//                            userInRoom.setCampId(room.getCamps().get(i).getCampId());
+//                            userInRoom.setCampName(room.getCamps().get(i).getCampName());
+//                            userInRoom.setWeaponId(userInRoom.getWeaponName());
+//                            break;
+//                        }
+//                    }
+//                    room.addUser(userInRoom);
+//                    roomRepository.save(room);
+//
+//                }
+//
+//                user.setState(2);
+//                userRepository.save(user);
+//                return new Result(room.getIp(), 1);
+//            }
+//            else
+//            {
+//                return new Result("房间已满", 0);
+//            }
         }
     }
 
@@ -334,7 +402,7 @@ public class RoomServiceImpl implements RoomService {
         Date date = new Date();
 
         Room room = roomRepository.findById(userInRoom.getRoomId()).get();
-        if(room.getRoomType().equals(RoomType.ROOM_SCORE) || room.getOwnerId().equals(userInRoom.getUserId())){
+        //if(room.getRoomType().equals(RoomType.ROOM_SCORE) || room.getOwnerId().equals(userInRoom.getUserId())){
             Set<UserInRoom> users = room.getUsers();
             for(UserInRoom user: users){
                 if(user.getState() == 0){
@@ -369,30 +437,36 @@ public class RoomServiceImpl implements RoomService {
             // 战斗号
             gameOverview.setGameId(room.getGameId());
 
-
-
             // 给战斗服务器发消息
-            String roomInfoToSend = room.getId() + " " + room.getMaxPlayerNum() + " "  + "1" + " " + "0" + " " + room.getDigitalRoomType() + " " + room.getPlayerNum() + " "  + room.getGameId() + "\n";
+            String roomInfoToSend = room.getId() + " " + room.getMaxPlayerNum() + " "  + room.getFrequency() + " " + "0" + " " + room.getDigitalRoomType() + " " + room.getPlayerNum() + " "  + room.getGameId() + "\n";
             String send = roomInfoToSend + userInfoToSend;
 
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<String> request = new HttpEntity<>(send);//将对象装入HttpEntity中
 
-//            try{
-//                String info = restTemplate.postForObject("http://10.0.0.24:30604", request, String.class);
-//            }catch (Exception e)
-//            {
-//                return new Result(e.toString(), 0);
-//            }
+            try{
+                //String info = restTemplate.postForObject("http://10.0.0.24:30604", request, String.class);
+                //String info = restTemplate.postForObject("http://202.120.40.8:30604", request, String.class);
+            }catch (Exception e)
+            {
+                return new Result(e.toString(), 0);
+            }
+
+            if(room.getRoomType() == RoomType.ROOM_AI)
+            {
+                // 成功开始一次增加一次房间已训练值
+                int trainedNum = room.getTrainedNum() + 1;
+                room.setTrainedNum(trainedNum);
+            }
 
             roomRepository.save(room);
             gameOverviewRepository.insert(gameOverview);
 
             return new Result("操作成功，即将开始游戏......", 1);
-        }
-        else{
-            return new Result("没有权限", 0);
-        }
+        //}
+//        else{
+//            return new Result("没有权限", 0);
+//        }
     }
 
     // 对局中需要实时修改房间内用户状态
@@ -412,15 +486,40 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public Result endGame(Room room){
+        System.out.println("begin end");
+
         Room room1 = roomRepository.findById(room.getId()).get();
+        if(room1 == null)
+            return new Result("room id wrong", 0);
+
         // 写入对局总览
         Date date = new Date();
         GameOverview gameOverview = gameOverviewRepository.getByGameId(room1.getGameId());
+
+        int winUserId = room.getWinUserId();
+        int winCampId = room.getWinCampId();
+
+//        if(gameOverview == null)
+//            return new Result("game id wrong", 0);
+
         if(gameOverview != null)
           gameOverview.setEndTime(date);
 
         // 存储每个用户的历史记录
         for(UserInRoom userInRoom: room1.getUsers()){
+            if(userInRoom.getCampId() == winCampId)
+            {
+                userInRoom.setResult(1); // 在胜利阵营即为胜利
+                userInRoom.setScore(10); // 胜利 +10分
+                userInRoom.setDestroyNum(1); // 击毁数 +1
+            }
+            else
+            {
+                userInRoom.setResult(0); // 不在胜利阵营即为失败
+                userInRoom.setScore(0); // 失败 0分
+                userInRoom.setCrashNum(1); // 坠毁数 +1
+            }
+
             userInRoom.setEndTime(date);
             // 添加历史记录
             GameHistory gameHistory = new GameHistory(userInRoom.getUserId(), room1.getGameId());
@@ -443,29 +542,83 @@ public class RoomServiceImpl implements RoomService {
             gameOverviewRepository.save(gameOverview);
         }
 
-        // 恢复房间状态
-        room1.setGameId("");
-        room1.setPlayerNum(0);
-        room1.setSpectatorsNum(0);
-        room1.setState(0);
-        room1.getUsers().clear();
-        room1.getSpectators().clear();
-        room1.getCamps().clear();
-        // 初始化阵营
-        List<Camp> camps = new LinkedList<>();
-        for(int i = 0; i < room1.getCampNum(); i++)
+        // 如果是正常结束游戏，需要检查训练次数，不清空房间
+        if(room.getForceEnd() == 0)
         {
-            Camp camp = new Camp(i, room1.getEachCampPlayNum());
-            camps.add(camp);
+            // 人机训练场如果训练次数没有达到预设值，需要更新房间状态继续
+            if(room1.getRoomType() == RoomType.ROOM_AI && room1.getTrainedNum() < room1.getMaxTrainNum())
+            {
+                // 恢复房间状态,需要设置房间状态和游戏id
+                room1.setState(0);
+                long gameId = sequenceGenerator.generateSequence(GameOverview.SEQUENCE_NAME);
+                room1.setGameId(Long.toString(gameId));
+                // 房间内玩家需要清空分数、击毁数等等
+                for(UserInRoom userInRoom1 : room1.getUsers())
+                {
+                    userInRoom1.clearSelf();
+                }
+                for(int i = 0; i < room1.getCampNum(); i++)
+                {
+                    for(UserInRoom userInRoom2 : room1.getCamps().get(i).getUsersInCamp())
+                    {
+                        userInRoom2.clearSelf();
+                    }
+                }
+
+                //room1.setGameId(UUID.randomUUID().toString());
+                // 保存房间状态，准备开始下一局
+                roomRepository.save(room1);
+
+                beginGame(room1.getUsers().iterator().next());
+            }
+            // 训练次数达到之后删除该房间
+            else
+            {
+                // 结束游戏以后直接删除该房间
+                roomRepository.deleteById(room.getId());
+            }
         }
-        room1.setCamps(camps);
+        // 如果是强制结束游戏，需要检查训练次数和清空房间
+        else
+        {
+            if(room1.getRoomType() == RoomType.ROOM_AI && room1.getTrainedNum() < room1.getMaxTrainNum())
+            {
+                // 恢复房间状态
+                room1.setGameId("");
+                room1.setPlayerNum(0);
+                room1.setSpectatorsNum(0);
+                room1.setState(0);
+                room1.getUsers().clear();
+                room1.getSpectators().clear();
+                room1.getCamps().clear();
+                // 初始化阵营
+                List<Camp> camps = new LinkedList<>();
+                for(int i = 0; i < room1.getCampNum(); i++)
+                {
+                    Camp camp = new Camp(i, room1.getEachCampPlayNum());
+                    camps.add(camp);
+                }
+                room1.setCamps(camps);
 
-        room1.getExchangeCamps().clear();
+                room1.getExchangeCamps().clear();
 
-        long gameId = sequenceGenerator.generateSequence(GameOverview.SEQUENCE_NAME);
-        room1.setGameId(Long.toString(gameId));
-        //room1.setGameId(UUID.randomUUID().toString());
-        roomRepository.save(room1);
+                long gameId = sequenceGenerator.generateSequence(GameOverview.SEQUENCE_NAME);
+                room1.setGameId(Long.toString(gameId));
+
+                roomRepository.save(room1);
+            }
+            // 训练次数达到之后删除该房间
+            else
+            {
+                // 结束游戏以后直接删除该房间
+                roomRepository.deleteById(room.getId());
+            }
+        }
+
+
+
+
+        System.out.println("finish end");
 
         return new Result("ok", 1);
     }

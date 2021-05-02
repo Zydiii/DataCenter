@@ -82,4 +82,5 @@ public interface RoomService {
     @Transactional
     @Retryable(value = MongoCommandException.class, maxAttempts = 10, backoff = @Backoff(delay = 100))
     public Result changeScore(UserInRoom userInRoom);
+
 }

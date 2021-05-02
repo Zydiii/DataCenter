@@ -18,12 +18,15 @@ import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 import zyd.datacenter.Entities.User.AvatarHelper;
 
 
 @SpringBootApplication
 @EnableScheduling
 @EnableRetry
+@EnableWebSocket
 public class DatacenterApplication {
 
 	public static void main(String[] args) throws Exception{
@@ -42,6 +45,11 @@ public class DatacenterApplication {
 	@Bean
 	MongoTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
 		return new MongoTransactionManager(dbFactory);
+	}
+
+	@Bean
+	public ServerEndpointExporter serverEndpointExporter() {
+		return new ServerEndpointExporter();
 	}
 
 //	@Bean
