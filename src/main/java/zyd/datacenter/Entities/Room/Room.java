@@ -304,7 +304,7 @@ public class Room {
                 if(userInRoom.getResult() != 0)
                     user.setResult(userInRoom.getResult());
                 // 阵营里面的用户状态也修改，虽然这样很奇怪。。。
-                camps.get(userInRoom.getCampId()).changeUser(userInRoom);
+                camps.get(userInRoom.getCampId() - 1).changeUser(userInRoom); // camp id 需要 - 1
                 break;
             }
         }
@@ -329,7 +329,7 @@ public class Room {
         for(UserInRoom userInRoom: users){
             if(userInRoom.getUserId().equals(userId)){
                 userInRoom.setState(state);
-                camps.get(userInRoom.getCampId()).changeUserState(userInRoom);
+                camps.get(userInRoom.getCampId() - 1).changeUserState(userInRoom); // camp id 需要 - 1
                 break;
             }
         }

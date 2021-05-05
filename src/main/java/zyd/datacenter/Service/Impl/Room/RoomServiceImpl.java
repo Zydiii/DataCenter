@@ -110,7 +110,7 @@ public class RoomServiceImpl implements RoomService {
         List<Camp> camps = new LinkedList<>();
         for(int i = 0; i < campNum; i++)
         {
-            Camp camp = new Camp(i, eachCampNum);
+            Camp camp = new Camp(i + 1, eachCampNum);
             camps.add(camp);
         }
         room.setCamps(camps);
@@ -135,8 +135,8 @@ public class RoomServiceImpl implements RoomService {
         int fromCampId = userInRoom1.getCampId();
         if(toCampId == fromCampId)
             return new Result("操作无效", 0);
-        Camp toCamp = room.getCamps().get(toCampId);
-        Camp fromCamp = room.getCamps().get(fromCampId);
+        Camp toCamp = room.getCamps().get(toCampId - 1); // camp id 需要 -1
+        Camp fromCamp = room.getCamps().get(fromCampId - 1); // camp id 需要 -1
         if(toCamp.getUserNum() < toCamp.getMaxUserNum())
         {
             toCamp.joinCamp(userInRoom1);
@@ -316,7 +316,7 @@ public class RoomServiceImpl implements RoomService {
             {
                 if(userInRoom1.getUserId().equals(userInRoom.getUserId()))
                 {
-                    campId = userInRoom1.getCampId();
+                    campId = userInRoom1.getCampId() - 1; // 阵营编号需要 - 1
                     found = true;
                 }
             }
@@ -445,11 +445,12 @@ public class RoomServiceImpl implements RoomService {
             HttpEntity<String> request = new HttpEntity<>(send);//将对象装入HttpEntity中
 
             try{
-                //String info = restTemplate.postForObject("http://10.0.0.24:30604", request, String.class);
+                String info = restTemplate.postForObject("http://10.0.0.24:30604", request, String.class);
                 //String info = restTemplate.postForObject("http://202.120.40.8:30604", request, String.class);
             }catch (Exception e)
             {
-                return new Result(e.toString(), 0);
+                System.out.println("发送房间信息包出错：" + e.toString());
+                return new Result("战斗通讯服务器出错，请稍后重试", 0);
             }
 
             if(room.getRoomType() == RoomType.ROOM_AI)
@@ -595,7 +596,7 @@ public class RoomServiceImpl implements RoomService {
                 List<Camp> camps = new LinkedList<>();
                 for(int i = 0; i < room1.getCampNum(); i++)
                 {
-                    Camp camp = new Camp(i, room1.getEachCampPlayNum());
+                    Camp camp = new Camp(i + 1, room1.getEachCampPlayNum()); // camp id + 1，从 1 开始
                     camps.add(camp);
                 }
                 room1.setCamps(camps);

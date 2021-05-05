@@ -3,23 +3,23 @@ spring:
     name: spring-mongo-service
   data:
     mongodb:
-      host: 127.0.0.1
-      database: TEST
-      port: 27017
-      replica-set-name: rs0
+#      host: 127.0.0.1
+#      database: TEST
+#      port: 27017
+#      replica-set-name: rs0
 
 #      host: 10.0.12.4
 #      database: DataCenter
 #      port: 27017
 #      replica-set-name: my-mongo-set
 
-#      host: '${MONGO_HOST}'
-#      port: '${MONGO_PORT}'
-#      database: '${MONGO_DB}'
-#      username: '${MONGO_USERNAME}'
-#      password: '${MONGO_PASSWORD}'
-#      authentication-database: 'admin'
-#      replica-set-name: rs0
+      host: '${MONGO_HOST}'
+      port: '${MONGO_PORT}'
+      database: '${MONGO_DB}'
+      username: '${MONGO_USERNAME}'
+      password: '${MONGO_PASSWORD}'
+      authentication-database: 'admin'
+      replica-set-name: rs0
 #       uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:30602/${MONGO_DB}?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false
 
   mail:
