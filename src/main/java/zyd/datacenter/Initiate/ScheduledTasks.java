@@ -5,12 +5,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+import zyd.datacenter.Entities.User.User;
+import zyd.datacenter.Payload.Result;
+import zyd.datacenter.Service.Mail.MailService;
 import zyd.datacenter.Service.Rank.RankService;
 
 @Component
 public class ScheduledTasks {
     @Autowired
     RankService rankService;
+
+    @Autowired
+    MailService mailService;
 
     // 每30分钟进行总榜排序
     @Scheduled(cron = "0 */30 * * * ?")
@@ -36,6 +43,27 @@ public class ScheduledTasks {
         rankService.monthRankScheduler();
     }
 
+    // 每30分钟进行心跳检测
+//    @Scheduled(cron = "0 */30 * * * ?")
+//    public void heartCheck()
+//    {
+//        RestTemplate restTemplate = new RestTemplate();
+//        try{
+//            String info = restTemplate.getForObject("http://202.120.40.8:30609/api/test/all", String.class);
+//            System.out.println(info);
+//        }catch (Exception e)
+//        {
+//            mailService.sendSimpleMail("zydiii@sjtu.edu.cn", "【对抗仿真系统】 故障报警", "软件学院服务器断联，请及时检查修复! \n 报错内容如下：\n" + e.toString());
+//        }
+//
+//        try{
+//            String info = restTemplate.getForObject("http://10.119.7.179:30609/api/test/all", String.class);
+//            System.out.println(info);
+//        }catch (Exception e)
+//        {
+//            mailService.sendSimpleMail("zydiii@sjtu.edu.cn", "【对抗仿真系统】 故障报警", "网络中心服务器断联，请及时检查修复! \n 报错内容如下：\n" + e.toString());
+//        }
+//    }
 
 //    private Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
 //

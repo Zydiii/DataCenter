@@ -90,6 +90,8 @@ public class Room {
 
     private int forceEnd; // 0 -> 检查 trainNum，正常结束，1 -> 不检查 trainNUm，掉线
 
+    private int level; // 0 -> 简单，1 -> 一般， 2 -> 困难
+
     @Version
     private Long version;
 
@@ -118,12 +120,35 @@ public class Room {
 
     public void setDigitalRoomType(RoomType roomType)
     {
-        if(roomType == RoomType.ROOM_FREE)
+        if(roomType == RoomType.ROOM_AI)
+        {
+            if(this.level == 0)
+                this.digitalRoomType = 0;
+            else if(this.level == 1)
+                this.digitalRoomType = 3;
+            else
+                this.digitalRoomType = 0;
+        }
+        else if(roomType == RoomType.ROOM_FREE)
             this.digitalRoomType = 1;
-        else if(roomType == RoomType.ROOM_AI)
-            this.digitalRoomType = 0;
         else if(roomType == RoomType.ROOM_SCORE)
             this.digitalRoomType = 2;
+        else
+            this.digitalRoomType = 0;
+//        if(roomType == RoomType.ROOM_FREE)
+//            this.digitalRoomType = 1;
+//        else if(roomType == RoomType.ROOM_AI)
+//            this.digitalRoomType = 0;
+//        else if(roomType == RoomType.ROOM_SCORE)
+//            this.digitalRoomType = 2;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public int getTrainedNum() {
@@ -341,8 +366,15 @@ public class Room {
     }
 
     public void deleteSpectator(Spectator spectator){
-        this.spectators.remove(spectator);
-        this.spectatorsNum--;
+        for(Spectator spectator1 : spectators)
+        {
+            if(spectator1.getUserId().equals(spectator.getUserId()))
+            {
+                this.spectators.remove(spectator1);
+                this.spectatorsNum--;
+                return;
+            }
+        }
     }
 
     public int getMaxSpectatorsNum() {

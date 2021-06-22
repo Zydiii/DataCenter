@@ -99,6 +99,8 @@ public class Initiate implements CommandLineRunner {
         initiateChannel();
         initiateAsset();
 
+
+
         //rankService.test();
         // 总榜
         //rankService.allRankScheduler();

@@ -13,13 +13,27 @@ spring:
 #      port: 27017
 #      replica-set-name: my-mongo-set
 
-      host: '${MONGO_HOST}'
-      port: '${MONGO_PORT}'
-      database: '${MONGO_DB}'
-      username: '${MONGO_USERNAME}'
-      password: '${MONGO_PASSWORD}'
-      authentication-database: 'admin'
-      replica-set-name: rs0
+      #     腾讯云
+      host: 1.116.92.167
+      database: DataCenter
+      port: 27017
+      replica-set-name: my-mongo-set
+
+#     交大云
+#      host: 10.119.7.179
+#      database: DataCenter
+#      port: 27017
+#      replica-set-name: my-mongo-set
+
+#      软院服务器
+#      host: '${MONGO_HOST}'
+#      port: '${MONGO_PORT}'
+#      database: '${MONGO_DB}'
+#      username: '${MONGO_USERNAME}'
+#      password: '${MONGO_PASSWORD}'
+#      authentication-database: 'admin'
+#      replica-set-name: rs0
+
 #       uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:30602/${MONGO_DB}?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false
 
   mail:

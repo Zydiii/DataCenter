@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import zyd.datacenter.Entities.Game.GameHistory;
 import zyd.datacenter.Entities.Game.GameOverview;
+import zyd.datacenter.Entities.Rank.MonthRank;
 import zyd.datacenter.Entities.Room.Camp;
 import zyd.datacenter.Entities.Room.Room;
 import zyd.datacenter.Entities.Room.RoomType;
@@ -363,6 +364,20 @@ public class RoomServiceImpl implements RoomService {
         }
     }
 
+    public Result leaveWatchGame(Spectator spectator){
+        Room room = roomRepository.findById(spectator.getRoomId()).get();
+        User user = userRepository.findById(spectator.getUserId()).get();
+        if(room == null)
+            return new Result("房间无效", 0);
+        else{
+            room.deleteSpectator(spectator);
+            roomRepository.save(room);
+            user.setState(1);
+            userRepository.save(user);
+            return new Result("离开观战", 1);
+        }
+    }
+
     // 房间分配，负载均衡，方案待定
     private String allocatRoom(){
         String roomIp = "000";
@@ -376,9 +391,21 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public List<Room> getRoom(RoomType roomType){
-
-        return roomRepository.findAllByRoomType(roomType);
+        List<Room> rooms = roomRepository.findAllByRoomType(roomType);
+        rooms.sort(comparatorRoom);
+        return rooms;
     }
+
+    Comparator<Room> comparatorRoom = new Comparator <Room>(){
+        public int compare(Room room1,Room room2){
+            if (Integer.parseInt(room1.getId()) < Integer.parseInt(room2.getId()))
+                return 1;
+            else if (Integer.parseInt(room1.getId()) > Integer.parseInt(room2.getId()))
+                return -1;
+            else
+                return 0;
+        }
+    };
 
     public Result readyInRoom(UserInRoom userInRoom){
         Room room = roomRepository.findById(userInRoom.getRoomId()).get();
@@ -438,14 +465,16 @@ public class RoomServiceImpl implements RoomService {
             gameOverview.setGameId(room.getGameId());
 
             // 给战斗服务器发消息
-            String roomInfoToSend = room.getId() + " " + room.getMaxPlayerNum() + " "  + room.getFrequency() + " " + "0" + " " + room.getDigitalRoomType() + " " + room.getPlayerNum() + " "  + room.getGameId() + "\n";
+            String roomInfoToSend = room.getId() + " " + room.getMaxPlayerNum() + " "  + room.getFrequency() + " " + room.getEnvironmentId() + " " + room.getDigitalRoomType() + " " + room.getPlayerNum() + " "  + room.getGameId() + "\n";
             String send = roomInfoToSend + userInfoToSend;
 
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<String> request = new HttpEntity<>(send);//将对象装入HttpEntity中
 
             try{
-                String info = restTemplate.postForObject("http://10.0.0.24:30604", request, String.class);
+                String info = restTemplate.postForObject("http://10.119.6.245:30604", request, String.class);
+                //String info = restTemplate.postForObject("http://10.0.0.24:30604", request, String.class);
+
                 //String info = restTemplate.postForObject("http://202.120.40.8:30604", request, String.class);
             }catch (Exception e)
             {

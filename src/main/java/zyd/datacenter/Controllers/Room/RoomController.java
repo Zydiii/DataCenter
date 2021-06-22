@@ -108,6 +108,13 @@ public class RoomController {
         return resultToResponse(roomService.joinWatchRoom(spectator));
     }
 
+    @PostMapping("/leaveWatch")
+    @ApiOperation(value = "取消观战", notes = "目前没有实现")
+    public ResponseEntity<?> leaveWatchGame(@Valid @RequestBody Spectator spectator)
+    {
+        return resultToResponse(roomService.leaveWatchGame(spectator));
+    }
+
     @PostMapping("/readyInRoom")
     @ApiOperation(value = "准备", notes = "在房间内准备")
     public ResponseEntity<?> readyInRoom(@Valid @RequestBody @ApiParam("房间内用户json数据，至少需要给roomId、userId") UserInRoom userInRoom)
